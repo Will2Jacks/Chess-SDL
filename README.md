@@ -41,7 +41,7 @@ Check the correct package name of the SDL libraries. On Debian based distros tha
 * go to the src directory.
 * make
 * make project (or just run ./Project)
-* you can compile and run the tests in tests/Test_main typing "make test". The executable is generated at the top directory.
+* you can compile and run the tests located at tests/Test_main by typing "make test". The executable is generated at the top directory.
 
 **makefile commands:**
 	
