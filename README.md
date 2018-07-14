@@ -8,10 +8,11 @@ The original project is here: https://github.com/rodrigo-xavier/Xadrez
 
 * Fixing some minor aspects of the interface like the buggy mouse hover in the color selection;
 * Improving the implementation itself. The GUI code is a mess right now, but it's working!
-* board and piece skin selection feature;
+* make it to the check rule matching the actual chess rules
 * Giving an actual minmax style tree inteligence;
+* board and piece skin selection feature;
 * Translate the comments to English (They are in portuguese right now)
-* Cross-platform;
+* Cross-platform, windows on this fork but maybe I'll create a fork for an android implementation;
 
 **The files are organized this way:**
 
@@ -50,5 +51,6 @@ Check the correct package name of the SDL libraries. On Debian based distros tha
 	make clean	 -	clean object and executable files
 	make all	 -	compile, create test and run
     
+   ** Board and pieces assets taken from https://www.behance.net/gallery/10018309/Chess-Artwork-Pieces-and-Board-Art-Assets **
 -----------
-** Board and pieces assets were taken from https://www.behance.net/gallery/10018309/Chess-Artwork-Pieces-and-Board-Art-Assets **
+
