@@ -6,7 +6,7 @@ The original project is here: https://github.com/rodrigo-xavier/Xadrez
 
 **Some Goals for this fork**
 
-* Fixing some minor aspects of the interface like the buggy mouse hover in the color selection;
+* Fixing some minor interface aspects like the buggy mouse hover in the color selection and make it possible to pause at this time;
 * Improving the implementation itself. The GUI code is a mess right now, but it's working!
 * make it to the check rule matching the actual chess rules
 * Giving an actual minmax style tree inteligence;
