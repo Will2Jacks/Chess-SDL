@@ -13,7 +13,7 @@ The original project is here: https://github.com/rodrigo-xavier/Xadrez
 * board and piece skin selection feature;
 * More options for edit mode
 * Translate the comments to English (They are in portuguese right now)
-* Cross-platform, windows on this fork but maybe I'll create a fork for an android implementation;
+* Cross-platform, windows on this fork but maybe I'll create a new repo for an android implementation;
 
 **The files are organized this way:**
 
