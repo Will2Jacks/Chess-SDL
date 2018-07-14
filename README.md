@@ -8,7 +8,7 @@ The original project is here: https://github.com/rodrigo-xavier/Xadrez
 
 * Fixing some minor interface things like the buggy mouse hover at the color selection and make it possible to pause at this time;
 * Improving the implementation itself. The GUI code is a mess right now, but it's working!
-* make it to the check rule matching the actual chess rules
+* Matching the actual check and check mate rules. (You still can't avoid a check mate by protecting the king with another piece for instance)
 * Giving an actual minmax style tree inteligence;
 * board and piece skin selection feature;
 * More options for edit mode
@@ -27,7 +27,7 @@ The original project is here: https://github.com/rodrigo-xavier/Xadrez
 
 **Requirements:**
 	
-* Any linux distro you can install SDL libraries
+* Any linux distribution you can install SDL libraries
 * C++
 * g++
 * make
