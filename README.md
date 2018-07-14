@@ -51,6 +51,5 @@ Check the correct package name of the SDL libraries. On Debian based distros tha
 	make clean	 -	clean object and executable files
 	make all	 -	compile, create test and run
     
-   ** Board and pieces assets taken from https://www.behance.net/gallery/10018309/Chess-Artwork-Pieces-and-Board-Art-Assets **
 -----------
-
+Board and pieces assets taken from https://www.behance.net/gallery/10018309/Chess-Artwork-Pieces-and-Board-Art-Assets 
