@@ -4,114 +4,18 @@
 #include "../include/States.hpp"
 #include "../include/GUIBoard.hpp"
 
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
-
 GameState::GameState(){
     gameState = GameMode::GAME_MODE_MAIN_MENU;
     //graphics = gr;
 }
 
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
-
 GameMode GameState::getGameState(){
     return gameState;
 }
 
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
-
 void GameState::setGameState(GameMode gameMode){
     gameState = gameMode;
 }
-
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
 
 void GameState::renderMainMenu(){
 
@@ -156,30 +60,6 @@ void GameState::renderMainMenu(){
 
     }
 }
-
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
 
 void GameState::renderPauseMenu(){
 
@@ -234,30 +114,6 @@ void GameState::renderPauseMenu(){
 
     }
 }
-
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
 
 void GameState::renderEditMode(){
 
@@ -364,59 +220,7 @@ void GameState::renderEditMode(){
             //atualiza tela
             SDL_RenderPresent( gRenderer );
     }
-/*
-            //Handle events on queue
-            while( SDL_PollEvent( &e ) != 0 )
-            {
-                //User requests quit
-                if( e.type == SDL_QUIT )
-                {
-                    gameState = GameMode::GAME_MODE_QUIT;
-                } else if(e.type == SDL_KEYDOWN){
-                    switch(e.key.keysym.sym){
-                        case SDLK_ESCAPE:
-                            renderPauseMenu();
-                            //gameState = GAME_MODE_PAUSE;
-                            break;
-                    }
-                }
-
-            }
-
-            //Clear screen
-            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-            SDL_RenderClear( gRenderer );
-
-            gBoard.render(0,0);
-            //Update screen
-            SDL_RenderPresent( gRenderer );
-
-    }*/
 }
-
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
 
 void GameState::renderPVP(){
 
@@ -525,30 +329,6 @@ void GameState::renderPVP(){
     delete states;
     delete tabuleiro;
 }
-
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
 
 void GameState::renderCPU(){
 
@@ -671,30 +451,6 @@ void GameState::renderCPU(){
     delete states;
     delete tabuleiro;
 }
-
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
 
 void GameState::startStateMachine(GameMode gameMode){
 

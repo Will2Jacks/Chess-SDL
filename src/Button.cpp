@@ -1,27 +1,6 @@
 #include "../include/Button.hpp"
 
 /**@brief Método construtor dos botões do menu
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição: Este método 
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
 */
 
 Button::Button()
@@ -32,87 +11,15 @@ Button::Button()
     mCurrentSprite = ButtonSprite::BUTTON_SPRITE_MAIN_MENU;
 }
 
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
-
 void Button::setPosition( int x, int y )
 {                                                                                                                      
     mPosition.x = x;
     mPosition.y = y;
 }
 
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
-
 void Button::setCurrentSprite(ButtonSprite sprite){
     mCurrentSprite = sprite;
 }
-
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
 
 void Button::handleEvent( SDL_Event* e , GameState *gm)
 {
@@ -192,30 +99,6 @@ void Button::handleEvent( SDL_Event* e , GameState *gm)
         }
     }
 }
-
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
 
 void Button::render()
 {

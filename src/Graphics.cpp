@@ -26,32 +26,6 @@ Texture bestMove;
 Texture endGame[3];
 Texture selection;
 
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
-
-
-
 bool Graphics::loadMedia() {
     bool success = true;
     
@@ -201,30 +175,6 @@ bool Graphics::loadMedia() {
     return success;
 }
 
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
-
 bool Graphics::init(){
 
     bool success = true;
@@ -272,30 +222,6 @@ bool Graphics::init(){
     }
     return success;
 }
-
-/**@brief 
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição:
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: 
-*
-*Hipóteses: 
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Não há interface implícita
-*
-*Contrato na especificação: 
-*
-*/
 
 void Graphics::close() {
     //libera imagens

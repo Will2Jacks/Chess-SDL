@@ -1,63 +1,53 @@
-# Xadrez
-Implementação do jogo de xadrez para a disciplina Métodos de Programação
+# Chess-SDL
 
-**Os arquivos estão organizados da seguinte forma:**
+A simple Test driven Chess implementation my group and I made for an university project.
+We used the Catch test framework, SDL2 and C++.
 
-*	docs -> Contém os arquivos de documentação gerados pelo doxygen (Latex e Html) e os relatórios individuais de cada membro do grupo
-*	include-> Contém os arquivos de cabeçalho do código como (.hpp)
-*	obj-> Contém os objetos e arquivos gcov gerados pelo makefile
-*	src-> Contém os métodos das classes dos arquivos de cabeçalho, a main e o makefile
-*   tests-> Aqui estão localizados os testes 
+**Some Goals for this fork**
+
+* Fixing some minor aspects of the interface like the buggy mouse hover in the color selection;
+* Improving the implementation itself. The GUI code is a mess right now, but it's working!
+* board and piece skin selection feature;
+* Giving an actual minmax style tree inteligence;
+* Translate the comments to English (They are in portuguese right now)
+* Cross-platform;
+
+**The files are organized this way:**
+
+*	docs -> some gcov and doxygen stuff that was used.
+*	include-> header files
+*	obj-> object files
+*	src-> main, makefile and source codes
+*   tests-> where the tests were written
 
 -----------
-
-**Ambiente e Execução**
 
 **Requirements:**
 	
-	Ubuntu version: 18:04
-	C++ version: 11
-	gcc version: 7.3.0
-	make version: 4.1
-    libsdl2-dev
-    libsdl2-image-dev
-	*	Caso necessário, instale os pacotes utilizando "sudo apt-get install make" e "sudo apt-get install g++"
+* Any linux distro you can install SDL libraries
+* C++
+* g++
+* make
+* SDL2
+* SDL2-IMAGE
+ 
+Check the correct package name of the SDL libraries. On Debian based distros that's libsdl2-dev and libsdl2-image-dev. On arch based distros the packages are: sdl2 and sdl2_image.
 
-**Para compilar e executar:**
+**Compile and run**
 	
-*	Acesse o diretório "Sources", digite "make all" no terminal e o arquivo "Project" será gerado na estrutura principal do projeto e executado automaticamente gerando relatórios de teste em seguida. 
-*	Para executar digite "make project". (Executar direto o ./Project ainda não está funcionando)
+* go to the src directory.
+* make
+* make project (or just run ./Project)
+* you can compile and run the tests in tests/Test_main typing "make test". The executable is generated at the top directory.
 
-**Comandos makefile:**
+**makefile commands:**
 	
-	make		 -	Compila o Projeto
-	make project	 -	Executa o projeto
-	make gcov	 -	Gera arquivos gcov para testes
-	make clean	 -	Apaga arquivos objeto, binários, gcov e outros
-	make all	 -	Compila, executa e gera Arquivos Gcov
-
+	make		 -	Compile the project
+    make test    -  compile the test
+	make project -  run the project
+	make gcov	 -	create gcov reports in docs
+	make clean	 -	clean object and executable files
+	make all	 -	compile, create test and run
+    
 -----------
-
-**Links**
-
-**Links do Professor**
-
-	Tutorial:             https://guides.github.com/activities/hello-world/
-	Biblioteca ncurses:   http://www.tldp.org/HOWTO/NCURSES-Programming-HOWTO/index.html
-	Biblioteca SDL:       https://www.libsdl.org/
-	PlayCB:               http://pt-br.playcb.wikia.com/wiki/Wikia_PlayCB
-	QT:                   https://www.qt.io/ 
-
-**Curso C++**
-
-	Este é o melhor curso de C++ que vocês vão encontrar
-	https://goo.gl/pbwEiV
-
-**Tutorial do Paulo de SDL**
-
-	http://lazyfoo.net/tutorials/SDL/index.php
-
-**Xadrez**
-
-	https://github.com/nolderosw/xdgp
-	https://github.com/LuisCoder/Xadrez
+** Board and pieces assets were taken from https://www.behance.net/gallery/10018309/Chess-Artwork-Pieces-and-Board-Art-Assets **

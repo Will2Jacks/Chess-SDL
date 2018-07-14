@@ -5,7 +5,6 @@
 #include "../include/Rook.hpp"
 #include "../include/Queen.hpp"
 #include "../include/King.hpp"
-#include "../include/Board.hpp"
 #include "../include/States.hpp"
 #include "../include/GameState.hpp"
 #include <algorithm>
@@ -14,24 +13,6 @@
 using namespace std;
 
 /**@brief Método construtor de estados do jogo
-*
-*Parâmetros: Não há parâmetros
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição: Este método faz uma alocação das peças no tabuleiro
-*
-*Assertivas de entrada: Não há assertivas de entrada
-*
-*Requisitos: Deve haver memória suficiente para alocar todas as peças
-*
-*Hipóteses: As peças são alocadas, suas posições definidas e suas cores também
-*
-*Assertivas de saida: Não há assertivas de saída
-*
-*Interface explicita: Não há interface explicita
-*
-*Interface implicita: Manipulação de ponteiros na alocação de novas peças
 *
 *Contrato na especificação: O método deve criar novas peças, 
 *setando-as no tabuleiro, definindo suas posições e suas cores
@@ -74,31 +55,6 @@ States::States(void)
 }
 
 /**@brief Método que define se há uma peça no caminho
-*
-*Parâmetros: Um ponteiro para um objeto da classe 
-*Piece e dois inteiros que indicam a posição da peça no tabuleiro
-*
-*Tratamento de Erros: Não há tratamento de erros
-*
-*Descrição: O método verífica se existem obstáculos no caminho da peça, 
-*e se existir é retornado um objeto do tipo Obstáculo
-*
-*Assertivas de entrada: Ponteiro para um objeto da classe Piece e 
-*dois inteiros que indicam a posição da peça no tabuleiro
-*
-*Requisitos: A peça deve estar viva e suas posições devem pertencer ao tabuleiro
-*
-*Hipóteses: Se houver um obstáculo, O método deve indicar o tipo desse obstáculo
-*
-*Assertivas de saida: Obstacles Empty or Obstacles Friend or Obstacles Enemy
-*
-*Interface explicita: Piece * piece, int position_X, int position_Y
-*
-*Interface implicita: Manipulações com ponteiros da classe Piece
-*
-*Contrato na especificação: Com relação a posição atual da peça, 
-*é verificado se existem obstáculos para os seus respectivos movimentos
-*
 */
 
 Obstacles States::IsInTheWay(Piece * piece, int position_X, int position_Y)

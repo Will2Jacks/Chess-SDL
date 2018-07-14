@@ -2,7 +2,7 @@
 # Aqui estão listados os diretórios do projeto
 
 # Nomes dos executáveis
-PROJECT_EXE = ../Project
+PROJECT_EXE = Project
 TEST_EXE = ../Test
 
 # Nomes dos diretórios
@@ -30,10 +30,10 @@ LIBS = -lm -lSDL2 -lSDL2_image
 ########################## Listas com nomes dos arquivos de código ##########################
 # Define o local dos arquivos de código e arquivos de cabeçalho de código
 
-_HEADERS = Piece.hpp Board.hpp Pawn.hpp Knight.hpp Bishop.hpp Rook.hpp Queen.hpp King.hpp States.hpp Texture.hpp Button.hpp Graphics.hpp GameState.hpp GUIBoard.hpp
+_HEADERS = Piece.hpp Pawn.hpp Knight.hpp Bishop.hpp Rook.hpp Queen.hpp King.hpp States.hpp Texture.hpp Button.hpp Graphics.hpp GameState.hpp GUIBoard.hpp
 HEADERS = $(patsubst %,$(DIR_HEADERS)/%,$(_HEADERS))
 
-_OBJECTS = main.o Piece.o Board.o Pawn.o Knight.o Bishop.o Rook.o Queen.o King.o States.o Texture.o Button.o Graphics.o GameState.o GUIBoard.o
+_OBJECTS = main.o Piece.o Pawn.o Knight.o Bishop.o Rook.o Queen.o King.o States.o Texture.o Button.o Graphics.o GameState.o GUIBoard.o
 OBJECTS = $(patsubst %,$(DIR_OBJECTS)/%,$(_OBJECTS))
 
 _TESTS = Test_Main.cpp

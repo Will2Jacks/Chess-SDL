@@ -7,7 +7,7 @@
 
 class GUIBoard{
     public:
-        GUIBoard(void);
+//        GUIBoard(void);
         void updateFocus(int x, int y); //atualiza posicao clicada
         int indexToPixel(int index); //A partir de um indice (casa) retorna a posicao em pixels do tabuleiro
         //cor = 0 = branca, cor = 1 = preta
