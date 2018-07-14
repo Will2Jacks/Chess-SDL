@@ -2,6 +2,7 @@
 
 A simple Test driven Chess implementation my group and I made for an university project.
 We used the Catch test framework, SDL2 and C++.
+The original project is here: https://github.com/rodrigo-xavier/Xadrez
 
 **Some Goals for this fork**
 
