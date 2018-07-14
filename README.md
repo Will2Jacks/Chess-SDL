@@ -11,6 +11,7 @@ The original project is here: https://github.com/rodrigo-xavier/Xadrez
 * make it to the check rule matching the actual chess rules
 * Giving an actual minmax style tree inteligence;
 * board and piece skin selection feature;
+* More options for edit mode
 * Translate the comments to English (They are in portuguese right now)
 * Cross-platform, windows on this fork but maybe I'll create a fork for an android implementation;
 
@@ -50,6 +51,18 @@ Check the correct package name of the SDL libraries. On Debian based distros tha
 	make gcov	 -	create gcov reports in docs
 	make clean	 -	clean object and executable files
 	make all	 -	compile, create test and run
+	
+**Ingame commands:**
+
+* h -> show help (what are the possible positions for the selected piece)
+* b -> best movement (there's no possible moves tree yet so it's not quite accurate)
+
+On Edit mode:
+
+* left and right -> select the piece
+* up and down -> select the color
+* click -> place the piece.
+* d -> done, start a pvp mode after editing the piece positions
     
 -----------
 Board and pieces assets taken from https://www.behance.net/gallery/10018309/Chess-Artwork-Pieces-and-Board-Art-Assets 
