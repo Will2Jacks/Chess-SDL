@@ -7,7 +7,7 @@ The original project is here: https://github.com/rodrigo-xavier/Xadrez
 **Some Goals for this fork**
 
 * Fixing some minor interface things like the buggy mouse hover at the color selection and make it possible to pause at that screen;
-* Improving the implementation itself. The GUI code is a mess right now, but it's working!
+* Improving the implementation itself. The GUI code is a mess right now.
 * Matching the actual check and check mate rules. (You still can't avoid a check mate by protecting the king with another piece for instance)
 * Making an actual minmax  tree intelligence;
 * board and piece skin selection feature;
