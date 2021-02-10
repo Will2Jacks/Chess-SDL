@@ -45,8 +45,8 @@ Check the correct package name of the SDL libraries. On Debian based distros tha
 **makefile commands:**
 	
 	make		 -	Compile the project
-    make test    -  compile the test
-	make project -  run the project (totally bad design)
+    make test            -  compile the test
+	make project     -  run the project (totally bad design)
 	make gcov	 -	create gcov reports in docs
 	make clean	 -	clean object and executable files
 	make all	 -	compile, create test and run
