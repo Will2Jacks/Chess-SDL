@@ -7,7 +7,7 @@ The original project is here: https://github.com/rodrigo-xavier/Xadrez
 **Some Goals for this fork**
 
 * Fixing some minor interface things like the buggy mouse hover at the color selection and make it possible to pause at that screen;
-* Improving the implementation itself. The GUI code is a mess right now.
+* Improving the implementation. The GUI code is a mess right now.
 * Matching the actual check and check mate rules. (You still can't avoid a check mate by protecting the king with another piece for instance)
 * Making an actual minmax  tree intelligence;
 * board and piece skin selection feature;
@@ -46,7 +46,7 @@ Check the correct package name of the SDL libraries. On Debian based distros tha
 	
 	make		 -	Compile the project
     make test    -  compile the test
-	make project -  run the project
+	make project -  run the project (totally bad design)
 	make gcov	 -	create gcov reports in docs
 	make clean	 -	clean object and executable files
 	make all	 -	compile, create test and run
