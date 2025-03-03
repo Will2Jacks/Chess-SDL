@@ -21,7 +21,7 @@ void GameState::renderMainMenu(){
 
     bool quit = false;
 
-    //On main menu, there are only four Button choices, PVP(0),CPU(1),EDIT(2),QUIT(3): Refer to Button.hpp for more details
+    //On main menu, there are only four Button choices, PVP(0), CPU(1), EDIT(2), QUIT(3): Refer to Button.hpp for more details
     for (int i = 0 ; i < Button::TOTAL_BUTTONS/2 ; i++){
         gButtons[i].setCurrentSprite((ButtonSprite) i);
     }
@@ -39,7 +39,6 @@ void GameState::renderMainMenu(){
             Used for handling input events (keyboard, mouse, window events, etc.).
 
             int SDL_PollEvent(SDL_Event *event);
-
             */
 
             while( SDL_PollEvent( &e ) != 0 ) {
@@ -66,7 +65,6 @@ void GameState::renderMainMenu(){
             SDL_RenderClear:
             Clears the screen with the color set by SDL_SetRenderDrawColor.
             Fills the entire rendering target (screen) with that color.
-
             */
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
             SDL_RenderClear( gRenderer );
@@ -74,7 +72,7 @@ void GameState::renderMainMenu(){
             //Render buttons
             for( int i = 0; i < Button::TOTAL_BUTTONS/2; ++i )
             {
-                gButtons[ i ].render();
+                gButtons[i].render();
             }
 
             //Update screen
@@ -88,7 +86,7 @@ void GameState::renderPauseMenu(){
     bool quit = false;
     pause = 1;
 
-    // Pause Menu consists of the latter 4 buttons:- Continue,Save,Load,Return to Main
+    //Pause Menu consists of the latter 4 buttons: Continue, Save, Load, Return to Main
     for (int i = Button::TOTAL_BUTTONS/2 ; i < Button::TOTAL_BUTTONS ; i++){
         gButtons[i].setCurrentSprite((ButtonSprite) i);
     }
@@ -152,7 +150,7 @@ void GameState::renderEditMode(){
     GUIBoard *tabuleiro = new GUIBoard();
     GameResult gameResult = GameResult::NoContest;
 
-    tabuleiro->editBoard(this,states);
+    tabuleiro->editBoard(this, states);
     
     states->SetPieceTurn(tabuleiro->choosePieceTurn(this, states));
 
@@ -170,26 +168,26 @@ void GameState::renderEditMode(){
                             renderPauseMenu();
                             //gameState = GAME_MODE_PAUSE;
                             break;
-                        case SDLK_h:    // if key was 'h', toggle the showHint option
+                        case SDLK_h:    //if key was 'h', toggle the showHint option
                             showHint = !showHint;
                             break;
-                        case SDLK_b:    // if key was 'b', toggle the showBest option 
+                        case SDLK_b:    //if key was 'b', toggle the showBest option 
                             showBest = !showBest;
                     }
                 } else if(e.type == SDL_MOUSEBUTTONDOWN){
                     switch(e.type){
-                        case SDL_MOUSEBUTTONDOWN: //se clicar
+                        case SDL_MOUSEBUTTONDOWN: //if clicked
                             x = -1;
                             y = -1;
-                            SDL_GetMouseState(&x,&y); //pega posicao do mouse
-                            tabuleiro->updateFocus((int)x,(int)y); //atualiza o indice da matriz focado
+                            SDL_GetMouseState(&x, &y); //gets mouse position
+                            tabuleiro->updateFocus((int)x, (int)y); //updates the focused index of the board matrix
 
-                            //ve se houve jogada, atualiza os vetores de peças e zera a peça focada
+                            //checks if a move was made, updates the arrays of pieces and resets the focused piece
                             if(tabuleiro->checkMovement(states)){
                                 tabuleiro->focusedPiece = NULL;
-                            }else{
-                                //Se nao houve jogada, a peça focada é o foco atual
-                                tabuleiro->focusedPiece = states->GetPiece(tabuleiro->focus.x,tabuleiro->focus.y);
+                            } else {
+                                //If no move was made, the focused piece becomes the current focus
+                                tabuleiro->focusedPiece = states->GetPiece(tabuleiro->focus.x, tabuleiro->focus.y);
                             }
                             break;
                     }
@@ -197,50 +195,50 @@ void GameState::renderEditMode(){
 
             }
             
-            //trata se teve save
+            //handles save if it occurred
             if(gameState == GameMode::GAME_MODE_SAVE){
                 
                 states->SaveGame(GameMode::GAME_MODE_EDIT);
                 gameState = GameMode::GAME_MODE_EDIT;
             }
 
-            //trata se teve load
+            //handles load if it occurred
             if(gameState == GameMode::GAME_MODE_LOAD){
                 
                 states->LoadGame(GameMode::GAME_MODE_EDIT);
                 gameState = GameMode::GAME_MODE_EDIT;
             }
 
-            //limpa tela
+            //clears screen
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
             SDL_RenderClear( gRenderer );
 
-            //renderiza tabuleiro
-            gBoard.render(0,0);
+            //renders board
+            gBoard.render(0, 0);
             
             gameResult = states->WhoWon();
             if(gameResult == GameResult::NoContest){
 
                 if((tabuleiro->focusedPiece != NULL) ){
-                    //foco da peça
+                    //piece focus
                     if(tabuleiro->focusedPiece->GetName() != PieceName::Empty && (tabuleiro->focusedPiece->GetColor() == states->GetPieceTurn() )){
-                        pieceSelected.render(tabuleiro->indexToPixel(tabuleiro->focus.x),tabuleiro->indexToPixel(tabuleiro->focus.y)+2);
+                        pieceSelected.render(tabuleiro->indexToPixel(tabuleiro->focus.x), tabuleiro->indexToPixel(tabuleiro->focus.y) + 2);
                     }
                 
-                    //renderiza todos os movimentos possiveis se a peça em foco for a da jogada
+                    //renders all possible moves if the focused piece is the one to move
                     if(showHint && (tabuleiro->focusedPiece->GetColor() == states->GetPieceTurn() ) )
                         tabuleiro->renderPossibleMoves(states);
 
-                    if(showBest &&  (tabuleiro->focusedPiece->GetColor() == states->GetPieceTurn() ))
+                    if(showBest && (tabuleiro->focusedPiece->GetColor() == states->GetPieceTurn() ))
                         tabuleiro->renderBestMove(states);
-                    //renderiza todas as peças
+                    //renders all pieces
                     }
                 tabuleiro->renderAllPieces(states);
 
             } else{
-                endGame[(int)gameResult].render(0,0);
+                endGame[(int)gameResult].render(0, 0);
             }
-            //atualiza tela
+            //updates screen
             SDL_RenderPresent( gRenderer );
     }
 }
@@ -264,7 +262,7 @@ void GameState::renderPVP(){
 
     while(gameState == GameMode::GAME_MODE_PVP){
 
-            //lida com a fila de eventos
+            //handles the event queue
             while( SDL_PollEvent( &e ) != 0 ) {
                 //User requests quit
                 if( e.type == SDL_QUIT )
@@ -284,18 +282,18 @@ void GameState::renderPVP(){
                     }
                 } else if(e.type == SDL_MOUSEBUTTONDOWN){
                     switch(e.type){
-                        case SDL_MOUSEBUTTONDOWN: //se clicar
+                        case SDL_MOUSEBUTTONDOWN: //if clicked
                             x = -1;
                             y = -1;
-                            SDL_GetMouseState(&x,&y); //pega posicao do mouse
-                            tabuleiro->updateFocus((int)x,(int)y); //atualiza o indice da matriz focado
+                            SDL_GetMouseState(&x, &y); //gets mouse position
+                            tabuleiro->updateFocus((int)x, (int)y); //updates the focused index of the board matrix
 
-                            //ve se houve jogada, atualiza os vetores de peças e zera a peça focada
+                            //checks if a move was made, updates the arrays of pieces and resets the focused piece
                             if(tabuleiro->checkMovement(states)){
                                 tabuleiro->focusedPiece = NULL;
-                            }else{
-                                //Se nao houve jogada, a peça focada é o foco atual
-                                tabuleiro->focusedPiece = states->GetPiece(tabuleiro->focus.x,tabuleiro->focus.y);
+                            } else {
+                                //If no move was made, the focused piece becomes the current focus
+                                tabuleiro->focusedPiece = states->GetPiece(tabuleiro->focus.x, tabuleiro->focus.y);
                             }
                             break;
                     }
@@ -303,50 +301,50 @@ void GameState::renderPVP(){
 
             }
             
-            //trata se teve save
+            //handles save if it occurred
             if(gameState == GameMode::GAME_MODE_SAVE){
                 
                 states->SaveGame(GameMode::GAME_MODE_PVP);
                 gameState = GameMode::GAME_MODE_PVP;
             }
 
-            //trata se teve load
+            //handles load if it occurred
             if(gameState == GameMode::GAME_MODE_LOAD){
                 
                 states->LoadGame(GameMode::GAME_MODE_PVP);
                 gameState = GameMode::GAME_MODE_PVP;
             }
 
-            //limpa tela
+            //clears screen
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
             SDL_RenderClear( gRenderer );
 
-            //renderiza tabuleiro
-            gBoard.render(0,0);
+            //renders board
+            gBoard.render(0, 0);
             
             gameResult = states->WhoWon();
             if(gameResult == GameResult::NoContest){
 
                 if((tabuleiro->focusedPiece != NULL) ){
-                    //foco da peça
+                    //piece focus
                     if(tabuleiro->focusedPiece->GetName() != PieceName::Empty && (tabuleiro->focusedPiece->GetColor() == states->GetPieceTurn() )){
-                        pieceSelected.render(tabuleiro->indexToPixel(tabuleiro->focus.x),tabuleiro->indexToPixel(tabuleiro->focus.y)+2);
+                        pieceSelected.render(tabuleiro->indexToPixel(tabuleiro->focus.x), tabuleiro->indexToPixel(tabuleiro->focus.y) + 2);
                     }
                 
-                    //renderiza todos os movimentos possiveis se a peça em foco for a da jogada
+                    //renders all possible moves if the focused piece is the one to move
                     if(showHint && (tabuleiro->focusedPiece->GetColor() == states->GetPieceTurn() ) )
                         tabuleiro->renderPossibleMoves(states);
 
-                    if(showBest &&  (tabuleiro->focusedPiece->GetColor() == states->GetPieceTurn() ))
+                    if(showBest && (tabuleiro->focusedPiece->GetColor() == states->GetPieceTurn() ))
                         tabuleiro->renderBestMove(states);
-                    //renderiza todas as peças
+                    //renders all pieces
                     }
                 tabuleiro->renderAllPieces(states);
 
             } else{
-                endGame[(int)gameResult].render(0,0);
+                endGame[(int)gameResult].render(0, 0);
             }
-            //atualiza tela
+            //updates screen
             SDL_RenderPresent( gRenderer );
     }
     delete states;
@@ -360,7 +358,7 @@ void GameState::renderCPU(){
     bool showBest = false;
     int x = -1, y = -1;
 
-    bool player = true; //true -> branco
+    bool player = true; //true -> white
     bool CPUTurn = false; 
 
     SDL_Event e;
@@ -368,15 +366,15 @@ void GameState::renderCPU(){
     GUIBoard *tabuleiro = new GUIBoard();
     GameResult gameResult = GameResult::NoContest;
 
-    //jogador escolhe sua peça
-    player = tabuleiro->choosePieceTurn(this,states); 
+    //player chooses their piece
+    player = tabuleiro->choosePieceTurn(this, states); 
     states->SetPieceTurn(player);
 
-    CPUTurn = false; //jogador joga primeiro
+    CPUTurn = false; //player plays first
 
     while(gameState == GameMode::GAME_MODE_CPU){
         
-        //lida com a fila de eventos
+        //handles the event queue
         while( SDL_PollEvent( &e ) != 0 ) {
             //User requests quit
             if( e.type == SDL_QUIT )
@@ -396,19 +394,19 @@ void GameState::renderCPU(){
                 }
             } else if(e.type == SDL_MOUSEBUTTONDOWN){
                 switch(e.type){
-                    case SDL_MOUSEBUTTONDOWN: //se clicar
+                    case SDL_MOUSEBUTTONDOWN: //if clicked
                         if(CPUTurn == false){
                             x = -1;
                             y = -1;
-                            SDL_GetMouseState(&x,&y); //pega posicao do mouse
-                            tabuleiro->updateFocus((int)x,(int)y); //atualiza o indice da matriz focado
+                            SDL_GetMouseState(&x, &y); //gets mouse position
+                            tabuleiro->updateFocus((int)x, (int)y); //updates the focused index of the board matrix
 
-                            //ve se houve jogada, atualiza os vetores de peças e zera a peça focada
+                            //checks if a move was made, updates the arrays of pieces and resets the focused piece
                             if(tabuleiro->checkMovement(states)){
                                 tabuleiro->focusedPiece = NULL;
-                            }else{
-                                //Se nao houve jogada, a peça focada é o foco atual
-                                tabuleiro->focusedPiece = states->GetPiece(tabuleiro->focus.x,tabuleiro->focus.y);
+                            } else {
+                                //If no move was made, the focused piece becomes the current focus
+                                tabuleiro->focusedPiece = states->GetPiece(tabuleiro->focus.x, tabuleiro->focus.y);
                             }
                             break;
                             CPUTurn = true;
@@ -418,57 +416,56 @@ void GameState::renderCPU(){
 
         }
         
-        //trata se teve save
+        //handles save if it occurred
         if(gameState == GameMode::GAME_MODE_SAVE){
                 
             states->SaveGame(GameMode::GAME_MODE_CPU);
             gameState = GameMode::GAME_MODE_CPU;
         }
 
-        //trata se teve load
+        //handles load if it occurred
         if(gameState == GameMode::GAME_MODE_LOAD){
             
             states->LoadGame(GameMode::GAME_MODE_CPU);
             gameState = GameMode::GAME_MODE_CPU;
         }
 
-
-       //limpa tela
+       //clears screen
        SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
        SDL_RenderClear( gRenderer );
 
-       //renderiza tabuleiro
-       gBoard.render(0,0);
+       //renders board
+       gBoard.render(0, 0);
        
        gameResult = states->WhoWon();
        if(gameResult == GameResult::NoContest){
            
-           //cpu joga
+           //CPU plays
            if(CPUTurn = true){
                states->PlayBestMove(!player, Level::Hard);
                CPUTurn = false;
            }
 
            if((tabuleiro->focusedPiece != NULL) ){
-               //foco da peça
+               //piece focus
                if(tabuleiro->focusedPiece->GetName() != PieceName::Empty && (tabuleiro->focusedPiece->GetColor() == states->GetPieceTurn() )){
-                   pieceSelected.render(tabuleiro->indexToPixel(tabuleiro->focus.x),tabuleiro->indexToPixel(tabuleiro->focus.y)+2);
+                   pieceSelected.render(tabuleiro->indexToPixel(tabuleiro->focus.x), tabuleiro->indexToPixel(tabuleiro->focus.y) + 2);
                }
            
-               //renderiza todos os movimentos possiveis se a peça em foco for a da jogada
+               //renders all possible moves if the focused piece is the one to move
                if(showHint && (tabuleiro->focusedPiece->GetColor() == states->GetPieceTurn() ) )
                    tabuleiro->renderPossibleMoves(states);
 
-               if(showBest &&  (tabuleiro->focusedPiece->GetColor() == states->GetPieceTurn() ))
+               if(showBest && (tabuleiro->focusedPiece->GetColor() == states->GetPieceTurn() ))
                    tabuleiro->renderBestMove(states);
-               //renderiza todas as peças
+               //renders all pieces
                }
            tabuleiro->renderAllPieces(states);
 
        } else{
-           endGame[(int)gameResult].render(0,0);
+           endGame[(int)gameResult].render(0, 0);
        }
-       //atualiza tela
+       //updates screen
        SDL_RenderPresent( gRenderer );
     }
     delete states;
