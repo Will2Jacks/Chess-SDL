@@ -10,16 +10,16 @@
 
 using namespace std;
 
-/**@brief Classe do Torre que herda de Piece
+/**@brief Rook Class that inherits from Piece
 *
-*Parâmetros: Construtor e destrutor de Torre, IsMovementPossible e
-*funções herdadas de Piece como GetColor, GetName, GetPositionX, GetPositionY
+*Parameters: Constructor and destructor of Rook, IsMovementPossible, and
+*functions inherited from Piece such as GetColor, GetName, GetPositionX, GetPositionY
 *
-*Descrição: Esta classe define o Torre em um jogo de Xadrez padrão, aqui são 
-*definidos alguns dos métodos básicos para manipular um objeto dessa classe, 
-*como o método de construir e destruir um objeto desta classe, um método para
-*retornar sua cor, seu nome e sua posição no tabuleiro e outro para validar se a
-*jogada é possível
+*Description: This class defines the Rook in a standard Chess game. 
+*Here, some of the basic methods to manipulate an object of this class are defined, 
+*such as the method to construct and destroy an object of this class, a method to 
+*return its color, its name, and its position on the board, and another to validate 
+*if the move is possible.
 *
 */
 

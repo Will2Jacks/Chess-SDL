@@ -8,22 +8,20 @@
 class GUIBoard{
     public:
 //        GUIBoard(void);
-        void updateFocus(int x, int y); //atualiza posicao clicada
-        int indexToPixel(int index); //A partir de um indice (casa) retorna a posicao em pixels do tabuleiro
-        //cor = 0 = branca, cor = 1 = preta
-        void renderPieceOnBoard(PieceName piece, int cor, int ix, int iy); //renderiza peça no indice do tabuleiro
+        void updateFocus(int x, int y); // updates the clicked position
+        int indexToPixel(int index); // Given an index (square), returns the position in pixels on the board
+        // color = 0 = white, color = 1 = black
+        void renderPieceOnBoard(PieceName piece, int color, int ix, int iy); // renders a piece at the board index
         void renderAllPieces(States* states);
-        bool checkMovement(States* states); //checa se ouve alguma jogada, condicao: usa movePiece se a ultima peça clicada não for vazia
-        void renderPossibleMoves(States *states); //pinta casas com jogadas possiveis
-        void renderBestMove(States *states); //pinta casa com a melhor jogada
+        bool checkMovement(States* states); // checks if a move was made; condition: uses movePiece if the last clicked piece is not empty
+        void renderPossibleMoves(States *states); // highlights squares with possible moves
+        void renderBestMove(States *states); // highlights the best move square
         bool choosePieceTurn(GameState *gm, States* states);
         void editBoard(GameState *gm, States* states);
 
-
-
-        SDL_Rect board[8][8]; //matriz de retangulos (tabuleiro)
-        SDL_Point focus = {-1,-1}; //posicao clicada
-        Piece *focusedPiece = NULL; //ultima peça clicada
+        SDL_Rect board[8][8]; // matrix of rectangles (board)
+        SDL_Point focus = {-1,-1}; // clicked position
+        Piece *focusedPiece = NULL; // last clicked piece
 };
 
 #endif

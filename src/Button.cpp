@@ -1,6 +1,6 @@
 #include "../include/Button.hpp"
 
-/**@brief Método construtor dos botões do menu
+/**@brief Constructor Method for the menu buttons
 */
 
 Button::Button()
@@ -25,13 +25,24 @@ void Button::handleEvent( SDL_Event* e , GameState *gm)
 {
     check = 0;
     //If mouse event happened
+    /*
+    e->type == SDL_MOUSEMOTION
+
+    This checks if the event e corresponds to mouse movement.
+    If true, it means the user moved the mouse.
+    e->type == SDL_MOUSEBUTTONDOWN
+
+    This checks if the event e corresponds to a mouse button being pressed.
+    If true, it means the user clicked the mouse (left, right, or middle button).
+    */
     if( e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN ){
         //Get mouse position
         int x, y;
-        SDL_GetMouseState( &x, &y );
+        SDL_GetMouseState( &x, &y );    //retrieves the current position of the mouse
 
         bool inside = true;
 
+        // The following 4 ifs help determine which exact region the mouseClick had happened
         //Mouse is left of the button
         if( x < mPosition.x ) {
             inside = false;
@@ -50,28 +61,28 @@ void Button::handleEvent( SDL_Event* e , GameState *gm)
         }
 
         if( inside ) { 
-            check = 1;
+            check = 1;  //Shows logo of Knight when mouse is hovered over a button sprite
             //Set mouse over sprite
             switch( e->type )
             {
-                case SDL_MOUSEMOTION:
+                case SDL_MOUSEMOTION:   //if the mouse just moved,(without clicking), do nothing
                 //mCurrentSprite = BUTTON_SPRITE_CONTINUE;
                 break;
 
                 case SDL_MOUSEBUTTONDOWN:
                     switch(mCurrentSprite){
                         case ButtonSprite::BUTTON_SPRITE_PVP :
-                             gm->setGameState(GameMode::GAME_MODE_PVP);
+                             gm->setGameState(GameMode::GAME_MODE_PVP);     //set gameMode as PVP
                             //mCurrentSprite = BUTTON_SPRITE_CONTINUE;
                             break;
                         case ButtonSprite::BUTTON_SPRITE_CPU:
-                             gm->setGameState(GameMode::GAME_MODE_CPU);
+                             gm->setGameState(GameMode::GAME_MODE_CPU);     //set gameMode as CPU
                             break;
                         case ButtonSprite::BUTTON_SPRITE_EDIT:
-                             gm->setGameState(GameMode::GAME_MODE_EDIT);
+                             gm->setGameState(GameMode::GAME_MODE_EDIT);    //set gameMode as edit
                             break;
                         case ButtonSprite::BUTTON_SPRITE_QUIT:
-                             gm->setGameState(GameMode::GAME_MODE_QUIT);
+                             gm->setGameState(GameMode::GAME_MODE_QUIT);    //set gameMode as QUIT
                             break;
                         case ButtonSprite::BUTTON_SPRITE_CONTINUE:
                              gm->pause = 0;

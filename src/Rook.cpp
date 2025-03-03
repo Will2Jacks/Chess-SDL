@@ -1,6 +1,6 @@
 #include "../include/Rook.hpp"
 
-/**@brief Método construtor da Torre
+/**@brief Rook Constructor Method
 *
 */
 
@@ -18,18 +18,18 @@ Rook::~Rook()
 {
 }
 
-/**@brief Função que valida se o movimento do Torre é possível
+/**@brief Function that validates if the Rook's movement is possible
 *
 */
 
 bool Rook::IsMovementPossible(int FinalPosition_X, int FinalPosition_Y)
 {
-  if(FinalPosition_X >= 0 && FinalPosition_Y >= 0 && FinalPosition_X < 8 && FinalPosition_Y < 8 && isAlive) //Peça tem que estar no tabuleiro e estar viva
+  if(FinalPosition_X >= 0 && FinalPosition_Y >= 0 && FinalPosition_X < 8 && FinalPosition_Y < 8 && isAlive) //Piece must be on the board and alive
   {
     int movement_x = abs(FinalPosition_X - position_X);
     int movement_y = abs(FinalPosition_Y - position_Y);
 
-    if((movement_x == 0 || movement_y == 0) && movement_x != movement_y) //Movimento na vertical/horizontal apenas (não ambos) e posição final diferente da inicial
+    if((movement_x == 0 || movement_y == 0) && movement_x != movement_y) //Movement only in vertical/horizontal (not both) and final position different from initial
     {
       return true;
     }

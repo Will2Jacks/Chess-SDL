@@ -10,16 +10,16 @@
 
 using namespace std;
 
-/**@brief Classe do Cavalo que herda de Piece
+/**@brief Class for the Knight, inheriting from Piece
 *
-*Parâmetros: Construtor e destrutor de Cavalo, IsMovementPossible e
-*funções herdadas de Piece como GetColor, GetName, GetPositionX, GetPositionY
+*Parameters: Constructor and destructor for Knight, IsMovementPossible, and
+*functions inherited from Piece such as GetColor, GetName, GetPositionX, GetPositionY
 *
-*Descrição: Esta classe define o Cavalo em um jogo de Xadrez padrão, aqui são 
-*definidos alguns dos métodos básicos para manipular um objeto dessa classe, 
-*como o método de construir e destruir um objeto desta classe, um método para
-*retornar sua cor, seu nome e sua posição no tabuleiro e outro para validar se a
-*jogada é possível
+*Description: This class defines the Knight in a standard Chess game. Here, 
+*some basic methods for handling an object of this class are defined, 
+*such as the method to construct and destroy an object of this class, 
+*a method to return its color, name, and position on the board, and another 
+*to validate whether the move is possible.
 *
 */
 

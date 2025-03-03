@@ -12,10 +12,10 @@
 
 using namespace std;
 
-/**@brief Método construtor de estados do jogo
+/**@brief Constructor method for game states
 *
-*Contrato na especificação: O método deve criar novas peças, 
-*setando-as no tabuleiro, definindo suas posições e suas cores
+*Specification contract: The method should create new pieces, 
+*placing them on the board, defining their positions and their colors.
 *
 */
 
@@ -23,7 +23,7 @@ States::States(void)
 {
   int i;
 
-//Inicialização dos peões
+// Initialization of pawns
   for(i=0;i<=7;i++)
   {
     white_pieces[i] = new Pawn(true, i, 6);
@@ -31,7 +31,7 @@ States::States(void)
   }
 
 
-//Inicialização das peças brancas
+// Initialization of white pieces
   white_pieces[8]  = new Rook(true, 0, 7);
   white_pieces[9]  = new Knight(true, 1, 7);
   white_pieces[10] = new Bishop(true, 2, 7);
@@ -41,7 +41,7 @@ States::States(void)
   white_pieces[14] = new Knight(true, 6, 7);
   white_pieces[15] = new Rook(true, 7, 7);
 
-//Inicialização das peças pretas
+// Initialization of black pieces
   black_pieces[8]  = new Rook(false, 0, 0);
   black_pieces[9]  = new Knight(false, 1, 0);
   black_pieces[10] = new Bishop(false, 2, 0);
@@ -54,7 +54,9 @@ States::States(void)
   pieceTurn = true;
 }
 
-/**@brief Método que define se há uma peça no caminho
+/**@brief Method that determines if there is a piece in the way
+
+It specifically checks whether there is any obstacle in the path between a piece's current position and a given position(important: between, the target position is excluded).  It returns an enumeration value indicating whether the path is clear (Empty), blocked by a friendly piece (Friend), or blocked by an enemy piece (Enemy).
 */
 
 Obstacles States::IsInTheWay(Piece * piece, int position_X, int position_Y)
@@ -63,7 +65,9 @@ Obstacles States::IsInTheWay(Piece * piece, int position_X, int position_Y)
   Piece ** aux;
 
   switch(piece->GetName())
-  {
+  { 
+    /* Since knights move in an “L” shape and can jump over other pieces, if the piece is a knight, the function immediately returns Obstacles::Empty (meaning no obstacles are considered). */
+
     case PieceName::Knight :
       return Obstacles::Empty;
       break;
@@ -75,7 +79,7 @@ Obstacles States::IsInTheWay(Piece * piece, int position_X, int position_Y)
 
       for(i=0;i<=15;i++)
       {
-        aux = white_pieces;
+        aux = white_pieces; //first, the white pieces are considered, then the black pieces are considered, the for loop variable 'j' handles this.
         for(j=0;j<=1;j++)
         {
           displacement_loop = 0;
@@ -85,7 +89,7 @@ Obstacles States::IsInTheWay(Piece * piece, int position_X, int position_Y)
           displacement_x != 0 ? displacement_loop = displacement_x : displacement_loop = displacement_y;
           displacement_loop = abs(displacement_loop);
 
-          while(displacement_loop > 1)
+          while(displacement_loop > 1)  //since only intermediate squares are checked
           {
             if(abs(displacement_x) != abs(displacement_y))
             {
@@ -98,9 +102,11 @@ Obstacles States::IsInTheWay(Piece * piece, int position_X, int position_Y)
               displacement_x > 0 ? horizontal++ : (displacement_x != 0 ? horizontal-- : horizontal = 0);
             }
 
+            //the below line is the core obstacle checking logic
             if((aux[i]->GetPositionX() == (piece->GetPositionX() + horizontal)) &&
                (aux[i]->GetPositionY() == (piece->GetPositionY() + vertical)))
-            {
+            { 
+              // if both are of same color, they are friends, else enemies
               if((piece->GetColor() && aux[i]->GetColor()) || (!piece->GetColor() && !aux[i]->GetColor()))
               {
                 return Obstacles::Friend;
@@ -122,26 +128,31 @@ Obstacles States::IsInTheWay(Piece * piece, int position_X, int position_Y)
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Preconditions: There are no preconditions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Postconditions: There are no postconditions
 *
-*Interface explicita: Não há interface explicita
+*Explicit interface: None
 *
-*Interface implicita: Não há interface implícita
+*Implicit interface: None
 *
-*Contrato na especificação: 
+*Specification contract: 
 *
+*/
+
+/*
+The following function determines what kind of piece (if any) occupies a specific board square
+given by position_X and position_Y. Here piece only plays the role of determining the piece(that is one at position_X and position_y) as enemy or friend
 */
 
 Obstacles States::IsInTheSpot(Piece * piece, int position_X, int position_Y)
@@ -171,46 +182,48 @@ Obstacles States::IsInTheSpot(Piece * piece, int position_X, int position_Y)
   return Obstacles::Empty;
 }
 
-/**@brief Método que verifica se o rei está em cheque
+/**@brief Method that checks if the king is in check
 *
-*Parâmetros: Um booleano que indica a cor do rei e duas 
-*posições que mostram sua posição no tabuleiro
+*Parameters: A boolean indicating the king's color and two 
+*positions that indicate his position on the board.
 *
-*Tratamento de Erros: É verificado se o movimento até o 
-*rei é possível e se não existem movimentos possíveis para o rei
+*Error Handling: It checks whether the move towards the king is possible and whether there are no possible moves for the king.
 *
-*Descrição: Este método verifica se o rei está em cheque, verificando se uma peça pode 
+*Description: This method checks if the king is in check by verifying if an enemy piece can reach the king and if the path to the king is clear.
 *
-*Assertivas de entrada: um booleano que indica a cor do rei 
-*e dois inteiros que indicam sua posição no tabuleiro
+*Preconditions: A boolean indicating the king's color and two integers indicating his position on the board.
 *
-*Requisitos: as posições do rei devem pertencer ao tabuleiros
+*Requirements: The king's positions must be valid board positions.
 *
-*Hipóteses: Se o rei estiver em cheque, então o método deve retornar true
+*Assumptions: If the king is in check, the method should return true.
 *
-*Assertivas de saida: É retornado um booleano true or false
-* indicando se o rei está em cheque
+*Postconditions: Returns a boolean (true or false) indicating whether the king is in check.
 *
-*Interface explicita: Não há interface explicita
+*Explicit interface: None
 *
-*Interface implicita: Não há interface implícita
+*Implicit interface: None
 *
-*Contrato na especificação: Se 
+*Specification contract: 
 *
 */
 
 bool States::IsCheck(bool kingColor, int position_X, int position_Y)
-{
+{ 
+  // if King is white, enemy is black and vice versa
   Piece ** aux;
   kingColor ? aux = black_pieces : aux = white_pieces;
 
   for(int i = 0; i<16; i++)
-  {
-    SetPawnDiagonalEnemies(true, aux[i], position_X, position_Y); //Bota os inimigos laterais do peão
+  { 
+    //Pawns have unique movement and capture rules in chess. While most pieces use the same pattern for moving and capturing (like a bishop moving diagonally both for moving and capturing), pawns normally move straight ahead but capture diagonally. This difference means that their move validation requires additional logic to correctly determine when a pawn can capture an enemy piece.
+
+    //For pieces like rooks, bishops, and queens, the standard obstacle checking in IsInTheWay is sufficient because their movement and capture patterns are identical
+
+    SetPawnDiagonalEnemies(true, aux[i], position_X, position_Y); // Sets the pawn's diagonal enemy markers, so that the King is not moved to such a (position_X,position_Y) which can be captured by a pawn
     if(aux[i]->IsMovementPossible(position_X, position_Y) &&
-    (IsInTheWay(aux[i], position_X, position_Y) == Obstacles::Empty))  //Verifica se os inimigos podem ir até o Rei, e se o caminho para ir para o Rei está livre.
+    (IsInTheWay(aux[i], position_X, position_Y) == Obstacles::Empty))  // Checks if enemy pieces can reach the king and if the path is clear.
       return true;
-    SetPawnDiagonalEnemies(false, aux[i], -1, -1); //Remove os inimigos diagonais do peão
+    SetPawnDiagonalEnemies(false, aux[i], -1, -1); // Removes the pawn's diagonal enemy markers
   }
 
   return false;
@@ -218,86 +231,100 @@ bool States::IsCheck(bool kingColor, int position_X, int position_Y)
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Preconditions: There are no preconditions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Postconditions: There are no postconditions
 *
-*Interface explicita: Não há interface explicita
+*Explicit interface: None
 *
-*Interface implicita: Não há interface implícita
+*Implicit interface: None
 *
-*Contrato na especificação: 
+*Specification contract: 
 *
 */
 
+//Function to move piece to (position_X, position_Y)
+
 bool States::MovePiece(Piece * piece, int position_X, int position_Y)
 {
-  SetPawnDiagonalEnemies(true, piece, -1, -1); //Bota os inimigos laterais do peão
-  Obstacles isIntheSpot = IsInTheSpot(piece, position_X, position_Y);
+  SetPawnDiagonalEnemies(true, piece, -1, -1); // Sets the pawn's diagonal enemy markers
+  Obstacles isIntheSpot = IsInTheSpot(piece, position_X, position_Y); //checks the type of piece(if empty, then Empty piece) that is occupying (position_X,position_Y)
+
+  //If piece can (logically,according to rules of the game, not neccessarily the current state of the game) move to that position, and path is free and position is empty or enemy and it is this piece's turn (when moving, the turn also gets important)
+
   if(piece->IsMovementPossible(position_X, position_Y) &&
   (IsInTheWay(piece, position_X, position_Y) == Obstacles::Empty) &&
   (isIntheSpot != Obstacles::Friend) && (pieceTurn == piece->GetColor()))
   {
-    SetPawnDiagonalEnemies(false, piece, -1, -1); //Remove os inimigos diagonais do peão
+    SetPawnDiagonalEnemies(false, piece, -1, -1); // Removes the pawn's diagonal enemy markers
+
+    //If I wanted to move a King to the position, but moving it there causes Check, then I can't move
 
     if(piece->GetName() == PieceName::King)
       if(IsCheck(piece->GetColor(), position_X, position_Y))
         return false;
 
-    if(piece->GetName() == PieceName::Pawn)  //Caso tenha um inimigo na frete do peao, e ele esteja tentando ir pra frente (nao pode comer nem andar)
+    //If I wanted to move a Pawn straight, but I can't move it if it is blocked by enemy
+    if(piece->GetName() == PieceName::Pawn)  // In case there is an enemy in front of the pawn and it is trying to move forward (it cannot capture or move)
       if(isIntheSpot == Obstacles::Enemy && (position_X - piece->GetPositionX() == 0))
         return false;
 
+    //If the spot is occupied by enemy, then I eat it
     if(isIntheSpot == Obstacles::Enemy)
       EatPiece(position_X, position_Y);
 
+    //If the spot is empty, that is this piece's new position
     piece->SetPosition(position_X, position_Y);
-    TransformPawn(piece);
-    pieceTurn = !pieceTurn;
-    return true;
+    TransformPawn(piece); //If pawn reaches the opposite end, transform it
+    pieceTurn = !pieceTurn; //toggle pieceTurn
+    return true;  //move was successful
   }
-  SetPawnDiagonalEnemies(false, piece, -1, -1); //Remove os inimigos diagonais do peão
+  SetPawnDiagonalEnemies(false, piece, -1, -1); // Removes the pawn's diagonal enemy markers
   return false;
 }
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Preconditions: There are no preconditions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Postconditions: There are no postconditions
 *
-*Interface explicita: Não há interface explicita
+*Explicit interface: None
 *
-*Interface implicita: Não há interface implícita
+*Implicit interface: None
 *
-*Contrato na especificação: 
+*Specification contract: 
 *
 */
 
+// This function performs the eating of a piece located at (position_X,position_Y)
 void States::EatPiece(int position_X, int position_Y)
 {
   Piece ** aux;
   int i, j;
+
+  //For all the pieces on the board, (first white and then black), if the piece's position is equal to the position to be Eaten, eat it(that is set it to Dead)
+
   aux = white_pieces;
   for(i = 0; i < 2; i++)
   {
@@ -314,49 +341,76 @@ void States::EatPiece(int position_X, int position_Y)
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Preconditions: There are no preconditions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Postconditions: There are no postconditions
 *
-*Interface explicita: Não há interface explicita
+*Explicit interface: None
 *
-*Interface implicita: Não há interface implícita
+*Implicit interface: None
 *
-*Contrato na especificação: 
+*Specification contract: 
 *
 */
 
+/*
+This function takes parameters:
+check: if true, the function actively checks for enemies, in the left and right diagonal positions of the pawn
+futureEnemyX: X position to which King is set to be moved
+futureEnemyY: Y position to which King is set to be moved
+*/
+
 void States::SetPawnDiagonalEnemies(bool check, Piece * piece, int futureEnemyX, int futureEnemyY)
-{
+{ 
+  // i==0, sets right Diagonal, i==1, sets left Diagonal
+  // verticalDirection is the y-direction of enemy piece, horizontalDirection is the x-direction of enemy piece
+  // the left and right, are set to true if there are respective enemies
+
   int i, verticalDirection, horizontalDirection;
   bool left = false, right = false;
 
-  if(piece->GetName() == PieceName::Pawn)
+  if(piece->GetName() == PieceName::Pawn) //works only for Pawn
   {
-    if(check)
-    {
+    if(check) //if we have to check
+    { 
+      // Color 1: White, Color 0: Black. Since White moves forward as y decreases, and vice versa, so if white piece, verticalDirection=piece->GetPositionY() - 1, else verticalDirection=piece->GetPositionY() + 1 
+
+      //for i==0, we check right diagonal, for i==1, left diagonal
+
       piece->GetColor() ? (verticalDirection = (piece->GetPositionY() - 1)) : (verticalDirection = (piece->GetPositionY() + 1));
       horizontalDirection = (piece->GetPositionX() + 1);
       for(i = 0; i < 2; i++)
-      {
+      { 
+        // If there is an enemy in the pos(hD,vD), then 
+        // if i==0
+        // if piece is white: then right diagonal means right enemy, else if piece is black, right diagonal, is left enemy
+
+        // if i==1
+        // if piece is white: then left diagonal means left enemy, else if piece is black, left diagonal, is right enemy
+
         if(IsInTheSpot(piece, horizontalDirection, verticalDirection) == Obstacles::Enemy)
           (i == 0) ? (piece->GetColor() ? right = true : left = true) : (piece->GetColor() ? left = true : right = true);
 
-        horizontalDirection = (piece->GetPositionX() -1);
+        horizontalDirection = (piece->GetPositionX() -1); // for left diagonal, hD is changed
       }
 
+      // The below check is done only if the futureEnemyX and futureEnemyY is the position to which the king is set to be moved. This is done to avoid moving the king to a check position
+
       if((abs(futureEnemyX - piece->GetPositionX()) == 1) && (abs(futureEnemyY - piece->GetPositionY()) == 1) && (futureEnemyX != -1) && (futureEnemyY != -1))
-      {
+      { 
+        // if piece is White, then right movement means right enemy, and vice versa
+        // if piece is black ,then right movement means left enemy, and vice versa
+
         piece->GetColor() ? ((futureEnemyX - piece->GetPositionX()) == 1 ? right = true : left = true) : ((futureEnemyX - piece->GetPositionX()) == -1 ? right = true : left = true);
       }
     }
@@ -366,34 +420,35 @@ void States::SetPawnDiagonalEnemies(bool check, Piece * piece, int futureEnemyX,
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Preconditions: There are no preconditions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Postconditions: There are no postconditions
 *
-*Interface explicita: Não há interface explicita
+*Explicit interface: None
 *
-*Interface implicita: Não há interface implícita
+*Implicit interface: None
 *
-*Contrato na especificação: 
+*Specification contract: 
 *
 */
 
 bool States::IsCheckMate(bool kingColor)
 {
-  Piece ** aux;
-  Piece ** aux2;
+  Piece ** aux; //Pieces of friend's color
+  Piece ** aux2;  //Pieces of enemy's color
   int i, j, k, x, y;
 
+  //For white pieces, friends are white, enemies are black, for black it's the opposite
   if(kingColor)
   {
     aux = white_pieces;
@@ -405,12 +460,15 @@ bool States::IsCheckMate(bool kingColor)
     aux2 = white_pieces;
   }
 
+  //aux[12] stores the king, its color, its position. If the piece is not King or the King is not in check, then no question of checkMate
   if(IsCheck(aux[12]->GetColor(), aux[12]->GetPositionX(), aux[12]->GetPositionY()))
   {
     x = aux[12]->GetPositionX();
     y = aux[12]->GetPositionY();
 
-  //Movimentos possíveis do Rei
+  // Possible moves for the King
+  // If there is at least one position such that , moving to that position is not check for King, and there is no friend piece at that pos, and there is no Enemy Piece that can reach there and there is no Enemy Piece whose way the King lies in( and the enemy can reach the King), and the King can move there, then the King is not in CheckMate
+
     for(i=-1;i<2;i++)
       for(j=-1;j<2;j++)
         for(k = 0; k < 16; k++)
@@ -426,25 +484,25 @@ bool States::IsCheckMate(bool kingColor)
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Preconditions: There are no preconditions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Postconditions: There are no postconditions
 *
-*Interface explicita: Não há interface explicita
+*Explicit interface: None
 *
-*Interface implicita: Não há interface implícita
+*Implicit interface: None
 *
-*Contrato na especificação: 
+*Specification contract: 
 *
 */
 
@@ -453,12 +511,14 @@ GameResult States::WhoWon(void)
   bool white = false, black = false;
   int i;
 
-  white = IsCheckMate(true) || !white_pieces[12]->GetIsAlive();
-  black = IsCheckMate(false) || !black_pieces[12]->GetIsAlive();
+  white = IsCheckMate(true) || !white_pieces[12]->GetIsAlive(); //condition for black to win
+  black = IsCheckMate(false) || !black_pieces[12]->GetIsAlive();  //condition for white to win
 
   if(white && black)
-    return GameResult::Draw;
+    return GameResult::Draw;  //if both have lost , the game is draw
 
+    //If neither is in checkMate or have lost their king, then the game is No contest
+    //If neither is in checkMate and only King remains, then the game is Draw
   if(!white && !black)
   {
     for(i = 0; i < 16; i++)
@@ -480,43 +540,48 @@ GameResult States::WhoWon(void)
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Preconditions: There are no preconditions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Postconditions: There are no postconditions
 *
-*Interface explicita: Não há interface explicita
+*Explicit interface: None
 *
-*Interface implicita: Não há interface implícita
+*Implicit interface: None
 *
-*Contrato na especificação: 
+*Specification contract: 
 *
 */
+
+// Just checks whether the movement of 'piece' to (position_X,position_Y) is valid or not
 
 bool States::IsPositionValid(Piece * piece, int position_X, int position_Y)
 {
   Obstacles obstacle;
+  //A King cannot move to a position if that position creates a check
   if(piece->GetName() == PieceName :: King)
   {
     if(IsCheck(piece->GetColor(), position_X, position_Y))
       return false;
   }
-  SetPawnDiagonalEnemies(true, piece, -1, -1); //Bota os inimigos laterais do peão
+  SetPawnDiagonalEnemies(true, piece, -1, -1); // Sets the pawn's diagonal enemy markers
   obstacle = IsInTheSpot(piece, position_X, position_Y);
+  // If piece can move to the pos, and its path is empty, and there is either enemy or empty piece at that pos: 
   if(piece->IsMovementPossible(position_X, position_Y) &&
     (IsInTheWay(piece, position_X, position_Y) == Obstacles::Empty) &&
     (obstacle != Obstacles::Friend))
     {
-      SetPawnDiagonalEnemies(false, piece, -1, -1); //Remove os inimigos laterais do peão
+      SetPawnDiagonalEnemies(false, piece, -1, -1); // Removes the pawn's diagonal enemy 
+      // For pawn, movement and eating are different. So if the piece is pawn, and there was an enemy at pos, then pawn can move only if the movement was a diagonal one, and not straight
       if((piece->GetName() == PieceName :: Pawn) && (obstacle == Obstacles::Enemy))
       {
         if(piece->GetPositionX() - position_X != 0)
@@ -528,34 +593,35 @@ bool States::IsPositionValid(Piece * piece, int position_X, int position_Y)
       }
     }
 
-  SetPawnDiagonalEnemies(false, piece, -1, -1); //Remove os inimigos laterais do peão
+  SetPawnDiagonalEnemies(false, piece, -1, -1); // Removes the pawn's diagonal enemy markers
   return false;
 }
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Preconditions: There are no preconditions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Postconditions: There are no postconditions
 *
-*Interface explicita: Não há interface explicita
+*Explicit interface: None
 *
-*Interface implicita: Não há interface implícita
+*Implicit interface: None
 *
-*Contrato na especificação: 
+*Specification contract: 
 *
 */
 
+// This function just returns the piece present at (position_X,position_Y). It loops over all the 16 pieces of White and Black colour, returns any matching one, else returns an emptyPiece 
 Piece * States::GetPiece(int position_X, int position_Y)
 {
   if((position_X >= 0) && (position_Y >=0) && (position_X < 8) && (position_Y < 8))
@@ -573,28 +639,29 @@ Piece * States::GetPiece(int position_X, int position_Y)
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Preconditions: There are no preconditions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Postconditions: There are no postconditions
 *
-*Interface explicita: Não há interface explicita
+*Explicit interface: None
 *
-*Interface implicita: Não há interface implícita
+*Implicit interface: None
 *
-*Contrato na especificação: 
+*Specification contract: 
 *
 */
 
+// This funciton is used to set up the pieces at the beginning of the game. It sets the 'piece' up at (position_X,position_Y)
 bool States::SetPiece(Piece *piece, int position_X, int position_Y)
 {
   if((position_X >= 0) && (position_Y >=0) && (position_X < 8) && (position_Y < 8))
@@ -608,29 +675,36 @@ bool States::SetPiece(Piece *piece, int position_X, int position_Y)
   return false;
 }
 
+
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Input Assertions: There are no input assertions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Output Assertions: There are no output assertions
 *
-*Interface explicita: Não há interface explicita
+*Explicit Interface: There is no explicit interface
 *
-*Interface implicita: Não há interface implícita
+*Implicit Interface: There is no implicit interface
 *
-*Contrato na especificação: 
+*Specification Contract: 
 *
 */
+
+// In this function the best move is played(according to difficulty level)
+// If color is 1, piece refers to white pieces, else black pieces. 
+// Piece Values refer to the value of the best move for each piece of that color
+// Now for each piece of the color, if there is a valuable move, its value is set to value of the movement
+// According to the difficulty of the game, either the most, 2nd most or 3rd most valuable movement (each corresponding to a different piece, unfortunately) is played
 
 void States::PlayBestMove(bool color, Level difficulty)
 {
@@ -662,7 +736,6 @@ void States::PlayBestMove(bool color, Level difficulty)
     {
       values[i] = -2000000000;
     }
-
   }
 
   n = sizeof(values)/sizeof(values[0]);
@@ -671,16 +744,16 @@ void States::PlayBestMove(bool color, Level difficulty)
   switch(difficulty)
   {
     case Level::Hard:
-    levelSelected = 15;
-    break;
+      levelSelected = 15;
+      break;
 
     case Level::Medium:
-    levelSelected = 14;
-    break;
+      levelSelected = 14;
+      break;
 
     case Level::Easy:
-    levelSelected = 13;
-    break;
+      levelSelected = 13;
+      break;
   }
 
   for(i = 0; i < 16; i++)
@@ -695,27 +768,31 @@ void States::PlayBestMove(bool color, Level difficulty)
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Input Assertions: There are no input assertions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Output Assertions: There are no output assertions
 *
-*Interface explicita: Não há interface explicita
+*Explicit Interface: There is no explicit interface
 *
-*Interface implicita: Não há interface implícita
+*Implicit Interface: There is no implicit interface
 *
-*Contrato na especificação: 
+*Specification Contract: 
 *
 */
+
+//This function updates the best moves for all the 32 pieces on the board
+// It checks for each piece, all the 64 squares on the board and then moves it to the square with the maximum value for it
+//However,unfortunately it prioritises capturing a piece to a strategic movement. In chess winning should be prioritised more than capturing valuable pieces
 
 void States::UpdateBestMoves(void)
 {
@@ -724,7 +801,7 @@ void States::UpdateBestMoves(void)
   PiecesValues  * aux;
   Piece ** aux2;
 
-  //Deixa ambos os vetores de melhores movimentos em branco.
+  // Clear both arrays of best moves.
   for(i = 0; i < 16; i++)
   {
     white_values[i].max_Value_X = -1;
@@ -735,7 +812,7 @@ void States::UpdateBestMoves(void)
     black_values[i].value = -20;
   }
 
-  //Calcula os melhores movimentos para cada peça
+  // Calculate the best moves for each piece.
   for(i = 0; i < 16; i++)
   {
     aux = white_values;
@@ -768,28 +845,29 @@ void States::UpdateBestMoves(void)
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Input Assertions: There are no input assertions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Output Assertions: There are no output assertions
 *
-*Interface explicita: Não há interface explicita
+*Explicit Interface: There is no explicit interface
 *
-*Interface implicita: Não há interface implícita
+*Implicit Interface: There is no implicit interface
 *
-*Contrato na especificação: 
+*Specification Contract: 
 *
 */
 
+// sets which piece's turn is now
 void States::SetPieceTurn(bool pieceTurn)
 {
   this->pieceTurn = pieceTurn;
@@ -797,28 +875,29 @@ void States::SetPieceTurn(bool pieceTurn)
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Input Assertions: There are no input assertions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Output Assertions: There are no output assertions
 *
-*Interface explicita: Não há interface explicita
+*Explicit Interface: There is no explicit interface
 *
-*Interface implicita: Não há interface implícita
+*Implicit Interface: There is no implicit interface
 *
-*Contrato na especificação: 
+*Specification Contract: 
 *
 */
 
+// returns which piece's turn is now
 bool States::GetPieceTurn(void)
 {
   return this->pieceTurn;
@@ -826,28 +905,27 @@ bool States::GetPieceTurn(void)
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Input Assertions: There are no input assertions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Output Assertions: There are no output assertions
 *
-*Interface explicita: Não há interface explicita
+*Explicit Interface: There is no explicit interface
 *
-*Interface implicita: Não há interface implícita
+*Implicit Interface: Pointer manipulations of the piece object
 *
-*Contrato na especificação: 
+*Specification Contract: 
 *
 */
-
 void States::SaveGame(GameMode mode)
 {
   FILE *fp = NULL;
@@ -915,28 +993,27 @@ void States::SaveGame(GameMode mode)
 
 /**@brief 
 *
-*Parâmetros: Não há parâmetros
+*Parameters: There are no parameters
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Input Assertions: There are no input assertions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Output Assertions: There are no output assertions
 *
-*Interface explicita: Não há interface explicita
+*Explicit Interface: There is no explicit interface
 *
-*Interface implicita: Manipulações através de ponteiros do objeto piece
+*Implicit Interface: Pointer manipulations of the piece object
 *
-*Contrato na especificação: 
+*Specification Contract: 
 *
 */
-
 void States::LoadGame(GameMode mode)
 {
   FILE *fp = NULL;
@@ -983,30 +1060,37 @@ void States::LoadGame(GameMode mode)
   fclose(fp);
 }
 
-/**@brief Método que retorna o melhor movimento para as peças
+/**@brief Method that returns the best move for the piece
 *
-*Parâmetros: Ponteiro para um objeto da classe Piece
+*Parameters: Pointer to an object of class Piece
 *
-*Tratamento de Erros: Não há tratamento de erros
+*Error Handling: There is no error handling
 *
-*Descrição:
+*Description:
 *
-*Assertivas de entrada: Não há assertivas de entrada
+*Input Assertions: There are no input assertions
 *
-*Requisitos: 
+*Requirements: 
 *
-*Hipóteses: 
+*Assumptions: 
 *
-*Assertivas de saida: Não há assertivas de saída
+*Output Assertions: There are no output assertions
 *
-*Interface explicita: Piece * piece
+*Explicit Interface: Piece * piece
 *
-*Interface implicita: Manipulações através de ponteiros do objeto piece
+*Implicit Interface: Pointer manipulations of the piece object
 *
-*Contrato na especificação: 
+*Specification Contract: 
 *
 */
 
+/*
+  This function retrieves the best move for a given piece by:
+
+Updating the best moves.
+Finding the piece in the color's piece list.
+Returning the stored best move for that piece.
+*/
 PiecesValues States::GetPieceBestMove(Piece * piece)
 {
     int i;
@@ -1033,34 +1117,33 @@ PiecesValues States::GetPieceBestMove(Piece * piece)
     }
 }
 
-/**@brief Método que transforma o peão em rainha
+/**@brief Method that transforms a pawn into a queen
 *
-*Parâmetros: Ponteiro para um objeto da classe Piece
+*Parameters: Pointer to an object of class Piece
 *
-*Tratamento de Erros: É verificado se o nome da peça é o de um peão, 
-*em seguida verifica-se se este peão atravessou todo o tabuleiro
+*Error Handling: It checks if the piece's name is that of a pawn,
+*and then verifies if this pawn has crossed the entire board.
 *
-*Descrição: Este método transforma um peão que atravessou todo o tabuleiro em uma rainha
+*Description: This method transforms a pawn that has crossed the entire board into a queen.
 *
-*Assertivas de entrada: Ponteiro para um objeto da classe Piece
+*Input Assertions: Pointer to an object of class Piece
 *
-*Requisitos: O peão tenha atravessado todo o tabuleiro 
-*e que haja memória para alocar uma nova rainha
+*Requirements: The pawn must have crossed the entire board 
+*and there must be available memory to allocate a new queen.
 *
-*Hipóteses: A peça seja um peão e que esteja na posição final do tabuleiro
+*Assumptions: The piece is a pawn and is at the final board position.
 *
-*Assertivas de saida: Não há assertivas de saída
+*Output Assertions: There are no output assertions
 *
-*Interface explicita: Piece * piece
+*Explicit Interface: Piece * piece
 *
-*Interface implicita: Manipulações através de ponteiros do objeto piece
+*Implicit Interface: Pointer manipulations of the piece object
 *
-*Contrato na especificação: Este método transforma um peão em rainha,
-* verificando se este peão foi capaz de atravessar todo o tabuleiro 
-*e chegar na última posição vertical do tabuleiro
+*Specification Contract: This method transforms a pawn into a queen,
+* verifying if the pawn was able to cross the entire board 
+* and reach the last vertical position of the board.
 *
 */
-
 void States::TransformPawn(Piece * piece)
 {
   int x, y, i;
@@ -1071,7 +1154,7 @@ void States::TransformPawn(Piece * piece)
   {
     color = piece->GetColor();
     y = piece->GetPositionY();
-    if((color && (y == 0)) || (!color && (y == 7)))
+    if((color && (y == 0)) || (!color && (y == 7))) //If pawn was able to reach the opposite row of board
     {
       x = piece->GetPositionX();
       color ? aux = white_pieces : aux = black_pieces;
@@ -1087,6 +1170,7 @@ void States::TransformPawn(Piece * piece)
   }
 }
 
+// Kills all the pieces, that is makes all of them inactive, to restart the game
 void States::KillAllPieces(void)
 {
   int i;
@@ -1096,3 +1180,4 @@ void States::KillAllPieces(void)
     black_pieces[i]->SetDead();
   }
 }
+

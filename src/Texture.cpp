@@ -2,7 +2,7 @@
 
 Texture::Texture()
 {
-    //Inicializa
+    //Initialize
     mTexture = NULL;
     mWidth = 0;
     mHeight = 0;
@@ -10,20 +10,19 @@ Texture::Texture()
 
 Texture::~Texture()
 {
-    //Desaloca
+    //Deallocate
     free();
 }
 
-
 bool Texture::loadFromFile( std::string path )
 {
-    //apaga o que tinha antes
+    //Deletes what was there before
     free();
 
-    //a textura que sera retornada
+    //The texture that will be returned
     SDL_Texture* newTexture = NULL;
 
-    //carrega imagem numa surface
+    //Loads image into a surface
     SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
     if( loadedSurface == NULL )
     {
@@ -31,10 +30,12 @@ bool Texture::loadFromFile( std::string path )
     }
     else
     {
-        //transparencia
+        //Transparency:
+        // This line sets color key transparency for the loadedSurface, meaning that a specific color in the image will be treated as fully transparent.
+
         SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
 
-        //textura a partir da surface
+        //Texture from surface
         newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
         if( newTexture == NULL )
         {
@@ -42,12 +43,12 @@ bool Texture::loadFromFile( std::string path )
         }
         else
         {
-            //dimensoes
+            //Dimensions
             mWidth = loadedSurface->w;
             mHeight = loadedSurface->h;
         }
 
-        //libera a memoria da superficie
+        //Frees the surface memory
         SDL_FreeSurface( loadedSurface );
     }
 
@@ -57,7 +58,7 @@ bool Texture::loadFromFile( std::string path )
 
 void Texture::free()
 {
-    //libera textura se existir
+    //Frees texture if it exists
     if( mTexture != NULL )
     {
         SDL_DestroyTexture( mTexture );
@@ -67,19 +68,21 @@ void Texture::free()
     }
 }
 
+// This function is responsible for rendering a texture onto the screen at a specified position, with optional transformations like cropping, rotation, and flipping.
+
 void Texture::render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip )
 {
-    //O quanto da textura vai renderizar
+    //How much of the texture will be rendered
     SDL_Rect renderQuad = { x, y, mWidth, mHeight };
 
-    //corte na textura (pra pegar partes da textura)
+    //Crop the texture (to get parts of the texture)
     if( clip != NULL )
     {
         renderQuad.w = clip->w;
         renderQuad.h = clip->h;
     }
 
-    //renderiza na tela
+    //Render on the screen
     SDL_RenderCopyEx( gRenderer, mTexture, clip, &renderQuad, angle, center, flip );
 }
 
@@ -92,4 +95,3 @@ int Texture::getHeight()
 {
     return mHeight;
 }
-

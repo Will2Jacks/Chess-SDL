@@ -21,17 +21,27 @@ void GameState::renderMainMenu(){
 
     bool quit = false;
 
-
+    //On main menu, there are only four Button choices, PVP(0),CPU(1),EDIT(2),QUIT(3): Refer to Button.hpp for more details
     for (int i = 0 ; i < Button::TOTAL_BUTTONS/2 ; i++){
         gButtons[i].setCurrentSprite((ButtonSprite) i);
     }
 
-    //Event handler
+    //Event handler: Declares an event structure e to store user inputs like key presses and mouse clicks.
     SDL_Event e;
 
     while(gameState == GameMode::GAME_MODE_MAIN_MENU){
 
             //Handle events on queue
+            /*
+            What does SDL_PollEvent do?
+            It retrieves and removes an event from the event queue.
+            Returns 1 if an event was found, 0 if the queue is empty.
+            Used for handling input events (keyboard, mouse, window events, etc.).
+
+            int SDL_PollEvent(SDL_Event *event);
+
+            */
+
             while( SDL_PollEvent( &e ) != 0 ) {
                 //User requests quit
                 if( e.type == SDL_QUIT )
@@ -46,6 +56,18 @@ void GameState::renderMainMenu(){
             }
 
             //Clear screen
+            /*
+            SDL_SetRenderDrawColor:
+            Sets the drawing color for the renderer (gRenderer).
+            The parameters represent RGBA values:
+            0xFF, 0xFF, 0xFF, 0xFF → White with full opacity.
+            Each value is between 0 (minimum) and 255 (0xFF in hex).
+
+            SDL_RenderClear:
+            Clears the screen with the color set by SDL_SetRenderDrawColor.
+            Fills the entire rendering target (screen) with that color.
+
+            */
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
             SDL_RenderClear( gRenderer );
 
@@ -66,7 +88,7 @@ void GameState::renderPauseMenu(){
     bool quit = false;
     pause = 1;
 
-
+    // Pause Menu consists of the latter 4 buttons:- Continue,Save,Load,Return to Main
     for (int i = Button::TOTAL_BUTTONS/2 ; i < Button::TOTAL_BUTTONS ; i++){
         gButtons[i].setCurrentSprite((ButtonSprite) i);
     }
@@ -85,6 +107,7 @@ void GameState::renderPauseMenu(){
                 {
                     gameState = GameMode::GAME_MODE_QUIT;
                 } else if(e.type == SDL_KEYDOWN){
+                    // e.key.keysym.sym: This stores the actual key symbol (SDL_Keycode), which represents the key that was pressed.
                     switch(e.key.keysym.sym){
                         case SDLK_ESCAPE:
                             pause = 0;
@@ -135,22 +158,22 @@ void GameState::renderEditMode(){
 
     while(gameState == GameMode::GAME_MODE_EDIT){
 
-            //lida com a fila de eventos
+            //Handles the event queue
             while( SDL_PollEvent( &e ) != 0 ) {
                 //User requests quit
                 if( e.type == SDL_QUIT )
                 {
                     gameState = GameMode::GAME_MODE_QUIT;
-                } else if(e.type == SDL_KEYDOWN){
+                } else if(e.type == SDL_KEYDOWN){   //else if a key was pressed
                     switch(e.key.keysym.sym){
-                        case SDLK_ESCAPE:
+                        case SDLK_ESCAPE:   //if the key was esc, then render the pause menu
                             renderPauseMenu();
                             //gameState = GAME_MODE_PAUSE;
                             break;
-                        case SDLK_h:
+                        case SDLK_h:    // if key was 'h', toggle the showHint option
                             showHint = !showHint;
                             break;
-                        case SDLK_b:
+                        case SDLK_b:    // if key was 'b', toggle the showBest option 
                             showBest = !showBest;
                     }
                 } else if(e.type == SDL_MOUSEBUTTONDOWN){

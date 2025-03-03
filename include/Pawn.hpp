@@ -10,16 +10,16 @@
 
 using namespace std;
 
-/**@brief Classe do Peão que herda de Piece
+/**@brief Pawn class that inherits from Piece
 *
-*Parâmetros: Construtor e destrutor de Peão, IsMovementPossible e
-*funções herdadas de Piece como GetColor, GetName, GetPositionX, GetPositionY
+*Parameters: Constructor and destructor of Pawn, IsMovementPossible, and
+*functions inherited from Piece such as GetColor, GetName, GetPositionX, GetPositionY.
 *
-*Descrição: Esta classe define o Peão em um jogo de Xadrez padrão, aqui são 
-*definidos alguns dos métodos básicos para manipular um objeto dessa classe, 
-*como o método de construir e destruir um objeto desta classe, um método para
-*retornar sua cor, seu nome e sua posição no tabuleiro e outro para validar se a
-*jogada é possível
+*Description: This class defines the Pawn in a standard Chess game. 
+*Here, some basic methods are defined to manipulate an object of this class, 
+*such as the method to construct and destroy an object of this class, 
+*a method to return its color, name, and position on the board, 
+*and another to validate whether a move is possible.
 *
 */
 

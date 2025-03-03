@@ -1,6 +1,6 @@
 #include "../include/Knight.hpp"
 
-/**@brief Método construtor do Cavalo
+/**@brief Knight's constructor method
 */
 
 Knight::Knight(bool isWhite, int position_X, int position_Y)
@@ -17,21 +17,21 @@ Knight::~Knight()
 {
 }
 
-/**@brief Função que valida se o movimento do Cavalo é possível
+/**@brief Function that validates if the Knight's movement is possible
  *
-*Descrição: O método verifica se a posição final pertence ao tabuleiro, 
-*e em seguida verifica se o movimento é possível para o Cavalo e se a 
-*posição final é diferente da posição em que ele já está
+*Description: The method checks if the final position is within the board, 
+*then verifies if the movement is valid for the Knight and if the 
+*final position is different from the position it is already in.
 */
 
 bool Knight::IsMovementPossible(int FinalPosition_X, int FinalPosition_Y)
 {
-  if(FinalPosition_X >= 0 && FinalPosition_Y >= 0 && FinalPosition_X < 8 && FinalPosition_Y < 8 && isAlive) //Peça tem que estar no tabuleiro e estar viva
+  if(FinalPosition_X >= 0 && FinalPosition_Y >= 0 && FinalPosition_X < 8 && FinalPosition_Y < 8 && isAlive) //The piece must be on the board and alive
   {
     int movement_x = abs(FinalPosition_X - position_X);
     int movement_y = abs(FinalPosition_Y - position_Y);
 
-    if((movement_x == 1 && movement_y == 2) || (movement_x == 2 && movement_y == 1)) //Movimento em 'L' e posição final diferente da inicial
+    if((movement_x == 1 && movement_y == 2) || (movement_x == 2 && movement_y == 1)) //L-shaped movement and final position different from the initial
     {
       return true;
     }

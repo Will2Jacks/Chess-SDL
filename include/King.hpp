@@ -10,16 +10,16 @@
 
 using namespace std;
 
-/**@brief Classe do Rei que herda de Piece
+/**@brief King class that inherits from Piece
 *
-*Parâmetros: Construtor e destrutor de Rei, IsMovementPossible e
-*funções herdadas de Piece como GetColor, GetName, GetPositionX, GetPositionY
+*Parameters: King constructor and destructor, IsMovementPossible, and
+*functions inherited from Piece such as GetColor, GetName, GetPositionX, GetPositionY
 *
-*Descrição: Esta classe define o Rei em um jogo de Xadrez padrão, aqui são 
-*definidos alguns dos métodos básicos para manipular um objeto dessa classe, 
-*como o método de construir e destruir um objeto desta classe, um método para
-*retornar sua cor, seu nome e sua posição no tabuleiro e outro para validar se a
-*jogada é possível
+*Description: This class defines the King in a standard Chess game. 
+*It includes basic methods for handling an object of this class, 
+*such as the constructor and destructor, a method to return its color, 
+*name, and position on the board, and another method to validate if 
+*a move is possible.
 *
 */
 

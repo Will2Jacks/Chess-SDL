@@ -5,8 +5,8 @@
 #include "GameState.hpp"
 
 
-enum class Obstacles{Empty,Friend,Enemy};
-enum class GameResult{WhiteWins,BlackWins,Draw,NoContest};
+enum class Obstacles{Empty, Friend, Enemy};
+enum class GameResult{WhiteWins, BlackWins, Draw, NoContest};
 enum class Level{Easy, Medium, Hard};
 
 struct PiecesValues
@@ -16,50 +16,49 @@ struct PiecesValues
   int value = -20;
 };
 
-/**@brief Classe que define estados para uma peça
+/**@brief Class that defines states for a piece
 *
-*Descrição: Nesta classe estão definidos os mecanismos do jogo de xadrez
-*Como transformar um peão em rainha, comer uma peça, validar se é cheque mate
-*Verificar quem venceu o jogo, salvar o jogo, carregar o jogo, validar quem foi o
-*vencedor da partida, entre outros métodos, aqui basicamente está definida toda a
-*lógica do jogo de xadrez, sendo assim uma das classes mais importantes deste código
-*
+* Description: This class defines the mechanisms of the chess game,
+* such as transforming a pawn into a queen, capturing a piece, checking for checkmate,
+* determining the winner of the game, saving the game, loading the game, validating the winner,
+* among other methods. Essentially, all the logic of the chess game is defined here,
+* making it one of the most important classes in this code.
 *
 */
 
 class States
 {
   private:
-    void SetPawnDiagonalEnemies(bool, Piece *, int, int);  //Se true, ele checa se ha inimigos e seta as flags, se false ele bota false nas flags de inimigo nas diagonais.
-    void EatPiece(int, int);    //Mata a peça da posição x, y.
-    bool pieceTurn;  //True - vez da branca, False - vez da preta.
+    void SetPawnDiagonalEnemies(bool, Piece *, int, int);  // If true, it checks for enemy pieces and sets the flags; if false, it resets the enemy flags on the diagonals.
+    void EatPiece(int, int);    // Kills the piece at position x, y.
+    bool pieceTurn;  // True - white's turn, False - black's turn.
     void TransformPawn(Piece * piece);
     Piece * emptyPiece = new Piece();
 
   public:
-    //Vetor que guarda as melhores jogadas de cada peça:
+    // Array that stores the best moves for each piece:
     PiecesValues white_values[16];
     PiecesValues black_values[16];
-    //Vetor de peças do tabuleiro:
+    // Array of pieces on the board:
     Piece * white_pieces[16];
     Piece * black_pieces[16];
     States();
     Obstacles IsInTheWay(Piece *, int, int);
     Obstacles IsInTheSpot(Piece *, int, int);
     bool IsCheck(bool, int, int);
-    bool MovePiece(Piece *, int, int);  //Move a peça apenas se for possivel, retornando true quando possivel e false caso contrario (podendo comer uma peça quando uma inimiga estiver na casa final)
+    bool MovePiece(Piece *, int, int);  // Moves the piece only if possible, returning true if the move is possible and false otherwise (can capture a piece if an enemy is on the target square).
     bool IsCheckMate(bool);
     GameResult WhoWon(void);
-    bool IsPositionValid(Piece *, int, int);  //Função que passa a peça, e uma posição x e y. A função retorna se o movimento é possivel para a peça, para aquela posição.
-    Piece * GetPiece(int, int); //Função que recebe uma posição X e uma Y, e retorna a peça daquela posição (retorna peça vazia caso não tenha peça na posição).
-    bool SetPiece(Piece *, int, int); //Função que seta a peça em uma posição X,Y, retorna true se a peça foi colocada la e false caso não tenha sido (pois o local já continha outra peça ou estava fora do tabuleiro).
-    void PlayBestMove(bool, Level);   //Função que joga o melhor movimento da cor da peça passado para ela (de acordo com Level de dificultade. dificil, medio, facil).
-    void UpdateBestMoves(void); //Função que atualiza os melhores movimentos para as peças brancas e pretas.
-    void SetPieceTurn(bool);  //Seta a vez da peça que vai jogar (para a função de Load)
+    bool IsPositionValid(Piece *, int, int);  // Function that takes a piece and a position (x, y) and returns whether the move is possible for that piece at that position.
+    Piece * GetPiece(int, int); // Function that receives a position X and Y, and returns the piece at that position (returns an empty piece if there is no piece at that position).
+    bool SetPiece(Piece *, int, int); // Function that sets the piece at a position (X, Y), returning true if the piece was placed there and false if not (if the location already contained another piece or was outside the board).
+    void PlayBestMove(bool, Level);   // Function that plays the best move for the specified color (according to difficulty level: hard, medium, easy).
+    void UpdateBestMoves(void); // Function that updates the best moves for the white and black pieces.
+    void SetPieceTurn(bool);  // Sets the turn for the piece that will play (used in the Load function).
     bool GetPieceTurn(void);
-    void SaveGame(GameMode); //Salva o jogo em um arquivo PGN de acordo com o modo de jogo.
-    void LoadGame(GameMode); //Faz o load do arquivo PGN para o jogo.
-    PiecesValues GetPieceBestMove(Piece *);  //Função recebe uma peça e retorna a melhor jogada para a peça. Caso retorne uma posição x,y -1 e -1, a peça não pode mover (não há jogadas pra ela)
+    void SaveGame(GameMode); // Saves the game to a PGN file according to the game mode.
+    void LoadGame(GameMode); // Loads the PGN file into the game.
+    PiecesValues GetPieceBestMove(Piece *);  // Function that receives a piece and returns the best move for that piece. If it returns a position (x, y) of -1 and -1, the piece cannot move (there are no available moves).
     void KillAllPieces(void);
 };
 

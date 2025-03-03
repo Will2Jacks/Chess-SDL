@@ -4,46 +4,46 @@
 #include <iostream>
 #include <string>
 
-enum class PieceName {Empty , Pawn , Knight , Bishop , Rook , Queen , King};
+enum class PieceName {Empty, Pawn, Knight, Bishop, Rook, Queen, King};
 
 using namespace std;
 
-/**@brief Classe que define uma peça
+/**@brief Class that defines a piece
 *
-*Parâmetros: Construtor e destrutor de Peça, IsMovementPossible
-* Nome, isWhite, position_X, position_Ym isAlive, PieceValue
+*Parameters: Constructor and destructor of Piece, IsMovementPossible
+* Name, isWhite, position_X, position_Y, isAlive, PieceValue
 *GetPositionX, getPositionY, SetDiagonalEnemy, SetPosition, GetIsAlive
-*WakeFromDead e SetDead
+*WakeFromDead and SetDead
 *
-*Descrição: Esta classe define uma peça genérica, com características 
-*comuns à todas as peças na qual outras peças devem herdar seus métodos 
-*e características como posição, cor e nome, entre outros
+*Description: This class defines a generic piece, with characteristics 
+*common to all pieces, in which other pieces must inherit its methods 
+*and characteristics such as position, color, and name, among others.
 *
 */
 
 class Piece
 {
   protected:
-    PieceName name = PieceName::Empty; //Define qual é a peça, de acordo com um enumerador.
-    bool isWhite = false;     //Define a cor da peça. OBS: Peças brancas que inicializam o jogo e que ficam em cima (posição 0x0 etc...).
-    int position_X = -1;   //Define a posição da peça no eixo X.
-    int position_Y = -1;   //Define a posição da peça no eixo Y.
-    bool isAlive = false; //True - peça está viva, False - peça está morta
+    PieceName name = PieceName::Empty; //Defines which piece it is, according to an enumerator.
+    bool isWhite = false; //Defines the color of the piece. NOTE: White pieces start the game and are placed at the top (position 0x0, etc...).
+    int position_X = -1; //Defines the piece's position on the X-axis.
+    int position_Y = -1; //Defines the piece's position on the Y-axis.
+    bool isAlive = false; //True - piece is alive, False - piece is dead.
 
   public:
     Piece();
     ~Piece();
     int PieceValue = -1;
-    bool GetColor();       //Retorna true se for branca, false caso seja preta.
-    PieceName GetName();   //Retorna o nome da peça (identificado por um enum).
-    int GetPositionX();    //Retorna a posição X.
-    int GetPositionY();    //Retorna a posição Y.
-    virtual bool IsMovementPossible(int, int); //Retorna true caso movimento seja possivel, falso caso contrario.
-    virtual void SetDiagonalEnemy(bool, bool); //Seta variável privada do peão.
-    void SetPosition(int, int); //Seta a posição X e Y da peça respectivamente.
-    bool GetIsAlive();    //Retorna True - peça viva / False - Peça morta
-    void WakeFromDead(); //Revive a peça
-    void SetDead();       //Seta a flag isAlive para morta. Quando morta, a peça não revive e sua posição vira -1x-1
+    bool GetColor(); //Returns true if white, false if black.
+    PieceName GetName(); //Returns the name of the piece (identified by an enum).
+    int GetPositionX(); //Returns the X position.
+    int GetPositionY(); //Returns the Y position.
+    virtual bool IsMovementPossible(int, int); //Returns true if movement is possible, false otherwise.
+    virtual void SetDiagonalEnemy(bool, bool); //Sets a private variable for the pawn.
+    void SetPosition(int, int); //Sets the X and Y position of the piece, respectively.
+    bool GetIsAlive(); //Returns True - piece is alive / False - piece is dead.
+    void WakeFromDead(); //Revives the piece.
+    void SetDead(); //Sets the isAlive flag to dead. When dead, the piece does not revive and its position becomes -1x-1.
 };
 
 #endif

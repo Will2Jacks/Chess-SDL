@@ -8,7 +8,7 @@ Piece::~Piece()
 {
 }
 
-/**@brief Método que retorna a cor da peça.
+/**@brief Method that returns the color of the piece.
 */
 
 bool Piece::GetColor()
@@ -16,7 +16,7 @@ bool Piece::GetColor()
   return isWhite;
 }
 
-/**@brief Método que retorna o nome da peça.
+/**@brief Method that returns the name of the piece.
 */
 
 PieceName Piece::GetName()
@@ -24,7 +24,7 @@ PieceName Piece::GetName()
   return name;
 }
 
-/**@brief Método que retorna a posição da peça no eixo X do tabuleiro.
+/**@brief Method that returns the piece's position on the X-axis of the board.
 */
 
 int Piece::GetPositionX()
@@ -32,7 +32,7 @@ int Piece::GetPositionX()
   return position_X;
 }
 
-/**@brief Método que retorna a posição da peça no eixo Y do tabuleiro.
+/**@brief Method that returns the piece's position on the Y-axis of the board.
 */
 
 int Piece::GetPositionY()
@@ -40,7 +40,7 @@ int Piece::GetPositionY()
   return position_Y;
 }
 
-/**@brief Método que retorna um booleano indicando se o movimento é possível
+/**@brief Method that returns a boolean indicating whether the movement is possible.
 */
 
 bool Piece::IsMovementPossible(int FinalPosition_X, int FinalPosition_Y)
@@ -52,7 +52,7 @@ void Piece::SetDiagonalEnemy(bool hasDiagonalEnemyRight, bool hasDiagonalEnemyLe
 {
 }
 
-/**@brief Método que seta as posições X e Y da peça no tabuleiro
+/**@brief Method that sets the X and Y positions of the piece on the board.
 */
 
 void Piece::SetPosition(int position_X, int position_Y)
@@ -64,7 +64,7 @@ void Piece::SetPosition(int position_X, int position_Y)
   }
 }
 
-/**@brief Método que diz se a peça está viva ou não
+/**@brief Method that indicates whether the piece is alive or not.
 */
 
 bool Piece::GetIsAlive()
@@ -72,7 +72,7 @@ bool Piece::GetIsAlive()
   return isAlive;
 }
 
-/**@brief Método que mata a peça
+/**@brief Method that kills the piece.
 */
 
 void Piece::SetDead()

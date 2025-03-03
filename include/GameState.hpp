@@ -36,7 +36,7 @@ enum class GameMode {
 
 };
 
-// Controla o estado do jogo
+// Controls the game state
 class GameState{
     
     public: 

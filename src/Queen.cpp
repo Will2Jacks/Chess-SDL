@@ -1,6 +1,6 @@
 #include "../include/Queen.hpp"
 
-/**@brief Método construtor da Rainha
+/**@brief Queen constructor method
 */
 
 Queen::Queen(bool isWhite, int position_X, int position_Y)
@@ -17,23 +17,23 @@ Queen::~Queen()
 {
 }
 
-/**@brief Função que valida se o movimento do Rainha é possível
+/**@brief Function that validates whether the Queen's move is possible
 *
 */
 
 bool Queen::IsMovementPossible(int FinalPosition_X, int FinalPosition_Y)
 {
-  if(FinalPosition_X >= 0 && FinalPosition_Y >= 0 && FinalPosition_X < 8 && FinalPosition_Y < 8 && isAlive) //Peça tem que estar no tabuleiro e estar viva
+  if(FinalPosition_X >= 0 && FinalPosition_Y >= 0 && FinalPosition_X < 8 && FinalPosition_Y < 8 && isAlive) //Piece must be on the board and alive
   {
     int movement_x = abs(FinalPosition_X - position_X);
     int movement_y = abs(FinalPosition_Y - position_Y);
 
-    if((movement_x == 0 || movement_y == 0) && movement_x != movement_y) //Movimento na vertical/horizontal apenas (não ambos) e posição final diferente da inicial
+    if((movement_x == 0 || movement_y == 0) && movement_x != movement_y) //Movement only in vertical/horizontal (not both) and final position different from the initial
     {
       return true;
     }
 
-    if(movement_x == movement_y && movement_x > 0) //Verificação do movimento na diagonal apenas e posição final diferente da inicial
+    if(movement_x == movement_y && movement_x > 0) //Check for diagonal movement only and final position different from the initial
     {
       return true;
     }
