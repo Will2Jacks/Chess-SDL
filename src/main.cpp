@@ -8,7 +8,7 @@
 #include "../include/States.hpp"
 
 #include "../include/Graphics.hpp"
-#include "common.hpp"
+#include "../include/common.hpp"
 
 #ifndef SDL_INCLUDES                                                       
 #define SDL_INCLUDES                                                       
