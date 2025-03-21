@@ -8,6 +8,7 @@
 #include "../include/States.hpp"
 #include "../include/GameState.hpp"
 #include <algorithm>
+#include <cstdlib>  // For rand()
 //#include <bits/stdc++.h>
 
 using namespace std;
@@ -258,40 +259,207 @@ bool States::IsCheck(bool kingColor, int position_X, int position_Y)
 bool States::MovePiece(Piece * piece, int position_X, int position_Y)
 {
   SetPawnDiagonalEnemies(true, piece, -1, -1); // Sets the pawn's diagonal enemy markers
-  Obstacles isIntheSpot = IsInTheSpot(piece, position_X, position_Y); //checks the type of piece(if empty, then Empty piece) that is occupying (position_X,position_Y)
+  Obstacles isIntheSpot = IsInTheSpot(piece, position_X, position_Y); // Determine what (if any) piece occupies the target square
 
-  //If piece can (logically,according to rules of the game, not neccessarily the current state of the game) move to that position, and path is free and position is empty or enemy and it is this piece's turn (when moving, the turn also gets important)
-
-  if(piece->IsMovementPossible(position_X, position_Y) &&
-  (IsInTheWay(piece, position_X, position_Y) == Obstacles::Empty) &&
-  (isIntheSpot != Obstacles::Friend) && (pieceTurn == piece->GetColor()))
+  // For a bishop, use the overloaded IsMovementPossible with board representation.
+  if(piece->GetName() == PieceName::Bishop)
   {
-    SetPawnDiagonalEnemies(false, piece, -1, -1); // Removes the pawn's diagonal enemy markers
+    // Build the board: an 8x8 array where each square is either a pointer to a living piece or nullptr.
+    Piece* board[8][8] = {nullptr};
+    for (int i = 0; i < 16; i++)
+    {
+      if(white_pieces[i]->GetIsAlive())
+      {
+        int x = white_pieces[i]->GetPositionX();
+        int y = white_pieces[i]->GetPositionY();
+        board[y][x] = white_pieces[i];
+      }
+      if(black_pieces[i]->GetIsAlive())
+      {
+        int x = black_pieces[i]->GetPositionX();
+        int y = black_pieces[i]->GetPositionY();
+        board[y][x] = black_pieces[i];
+      }
+    }
 
-    //If I wanted to move a King to the position, but moving it there causes Check, then I can't move
+    if(dynamic_cast<Bishop*>(piece)->IsMovementPossible(position_X, position_Y, board) &&
+       (isIntheSpot != Obstacles::Friend) &&
+       (pieceTurn == piece->GetColor()))
+    {
+      SetPawnDiagonalEnemies(false, piece, -1, -1); // Remove pawn diagonal markers
 
-    if(piece->GetName() == PieceName::King)
-      if(IsCheck(piece->GetColor(), position_X, position_Y))
-        return false;
+      // If moving a King, ensure the new position is not in check.
+      if(piece->GetName() == PieceName::King)
+        if(IsCheck(piece->GetColor(), position_X, position_Y))
+          return false;
 
-    //If I wanted to move a Pawn straight, but I can't move it if it is blocked by enemy
-    if(piece->GetName() == PieceName::Pawn)  // In case there is an enemy in front of the pawn and it is trying to move forward (it cannot capture or move)
-      if(isIntheSpot == Obstacles::Enemy && (position_X - piece->GetPositionX() == 0))
-        return false;
+      // Special handling for pawns
+      if(piece->GetName() == PieceName::Pawn)
+        if(isIntheSpot == Obstacles::Enemy && (position_X - piece->GetPositionX() == 0))
+          return false;
 
-    //If the spot is occupied by enemy, then I eat it
-    if(isIntheSpot == Obstacles::Enemy)
-      EatPiece(position_X, position_Y);
+      // If an enemy piece occupies the destination, capture it.
+      if(isIntheSpot == Obstacles::Enemy)
+        EatPiece(position_X, position_Y);
 
-    //If the spot is empty, that is this piece's new position
-    piece->SetPosition(position_X, position_Y);
-    TransformPawn(piece); //If pawn reaches the opposite end, transform it
-    pieceTurn = !pieceTurn; //toggle pieceTurn
-    return true;  //move was successful
+      piece->SetPosition(position_X, position_Y);
+      TransformPawn(piece);
+      pieceTurn = !pieceTurn;
+      return true;
+    }
+    SetPawnDiagonalEnemies(false, piece, -1, -1);
+    return false;
   }
-  SetPawnDiagonalEnemies(false, piece, -1, -1); // Removes the pawn's diagonal enemy markers
-  return false;
+  // For non-bishop pieces.
+  else
+  {
+    // Special branch for the King to handle castling.
+    if(piece->GetName() == PieceName::King &&
+       piece->IsMovementPossible(position_X, position_Y) &&
+       (IsInTheWay(piece, position_X, position_Y) == Obstacles::Empty) &&
+       (isIntheSpot != Obstacles::Friend) &&
+       (pieceTurn == piece->GetColor()))
+    {
+      int currentX = piece->GetPositionX();
+      int currentY = piece->GetPositionY();
+      int dx = position_X - currentX;
+      
+      // Check for castling move: King moves two squares horizontally (and no vertical change).
+      if(abs(dx) == 2 && (position_Y == currentY))
+      {
+        // Enforce that the King has not moved.
+        if(piece->GetHasMoved())  // (Assuming GetHasMoved() exists; otherwise, check the hasMoved property.)
+        {
+          SetPawnDiagonalEnemies(false, piece, -1, -1);
+          return false;
+        }
+        
+        Piece *rook = nullptr;
+        Piece ** aux = (piece->GetColor() ? white_pieces : black_pieces);
+        
+        // Kingside castling (move to right).
+        if(dx > 0)
+        {
+          // Search for the rook at (7, currentY) that has not moved.
+          for(int i = 0; i < 16; i++)
+          {
+            if(aux[i]->GetName() == PieceName::Rook &&
+               aux[i]->GetPositionX() == 7 &&
+               aux[i]->GetPositionY() == currentY &&
+               aux[i]->GetIsAlive() &&
+               !aux[i]->GetHasMoved())
+            {
+              rook = aux[i];
+              break;
+            }
+          }
+          if(rook == nullptr)
+          {
+            SetPawnDiagonalEnemies(false, piece, -1, -1);
+            return false;
+          }
+          // Ensure path clearance: squares (currentX+1, currentY) and (currentX+2, currentY) must be empty.
+          if(GetPiece(currentX+1, currentY) != emptyPiece || GetPiece(currentX+2, currentY) != emptyPiece)
+          {
+            SetPawnDiagonalEnemies(false, piece, -1, -1);
+            return false;
+          }
+          // Ensure that the King does not pass through or end in check.
+          if(IsCheck(piece->GetColor(), currentX, currentY) ||
+             IsCheck(piece->GetColor(), currentX+1, currentY) ||
+             IsCheck(piece->GetColor(), currentX+2, currentY))
+          {
+            SetPawnDiagonalEnemies(false, piece, -1, -1);
+            return false;
+          }
+          // Castling: Move King and reposition Rook.
+          piece->SetPosition(position_X, position_Y);
+          rook->SetPosition(currentX+1, currentY);
+          // Mark both as having moved.
+          piece->SetHasMoved(true);
+          rook->SetHasMoved(true);
+          pieceTurn = !pieceTurn;
+          SetPawnDiagonalEnemies(false, piece, -1, -1);
+          return true;
+        }
+        else // Queenside castling (move to left).
+        {
+          // Search for the rook at (0, currentY) that has not moved.
+          for(int i = 0; i < 16; i++)
+          {
+            if(aux[i]->GetName() == PieceName::Rook &&
+               aux[i]->GetPositionX() == 0 &&
+               aux[i]->GetPositionY() == currentY &&
+               aux[i]->GetIsAlive() &&
+               !aux[i]->GetHasMoved())
+            {
+              rook = aux[i];
+              break;
+            }
+          }
+          if(rook == nullptr)
+          {
+            SetPawnDiagonalEnemies(false, piece, -1, -1);
+            return false;
+          }
+          // Ensure path clearance: squares (currentX-1, currentY), (currentX-2, currentY), and (currentX-3, currentY) must be empty.
+          if(GetPiece(currentX-1, currentY) != emptyPiece || 
+             GetPiece(currentX-2, currentY) != emptyPiece || 
+             GetPiece(currentX-3, currentY) != emptyPiece)
+          {
+            SetPawnDiagonalEnemies(false, piece, -1, -1);
+            return false;
+          }
+          // Ensure that the King does not pass through or end in check.
+          if(IsCheck(piece->GetColor(), currentX, currentY) ||
+             IsCheck(piece->GetColor(), currentX-1, currentY) ||
+             IsCheck(piece->GetColor(), currentX-2, currentY))
+          {
+            SetPawnDiagonalEnemies(false, piece, -1, -1);
+            return false;
+          }
+          // Castling: Move King and reposition Rook.
+          piece->SetPosition(position_X, position_Y);
+          rook->SetPosition(currentX-1, currentY);
+          piece->SetHasMoved(true);
+          rook->SetHasMoved(true);
+          pieceTurn = !pieceTurn;
+          SetPawnDiagonalEnemies(false, piece, -1, -1);
+          return true;
+        }
+      }
+    }
+
+    // Normal move handling for non-king pieces (or king moves that are not castling).
+    if(piece->IsMovementPossible(position_X, position_Y) &&
+       (IsInTheWay(piece, position_X, position_Y) == Obstacles::Empty) &&
+       (isIntheSpot != Obstacles::Friend) &&
+       (pieceTurn == piece->GetColor()))
+    {
+      SetPawnDiagonalEnemies(false, piece, -1, -1); // Remove pawn diagonal markers
+
+      if(piece->GetName() == PieceName::King)
+        if(IsCheck(piece->GetColor(), position_X, position_Y))
+          return false;
+
+      if(piece->GetName() == PieceName::Pawn)
+        if(isIntheSpot == Obstacles::Enemy && (position_X - piece->GetPositionX() == 0))
+          return false;
+
+      if(isIntheSpot == Obstacles::Enemy)
+        EatPiece(position_X, position_Y);
+
+      piece->SetPosition(position_X, position_Y);
+      TransformPawn(piece);
+      pieceTurn = !pieceTurn;
+      return true;
+    }
+    SetPawnDiagonalEnemies(false, piece, -1, -1);
+    return false;
+  }
 }
+
+
 
 /**@brief 
 *
@@ -567,22 +735,51 @@ GameResult States::WhoWon(void)
 bool States::IsPositionValid(Piece * piece, int position_X, int position_Y)
 {
   Obstacles obstacle;
-  //A King cannot move to a position if that position creates a check
-  if(piece->GetName() == PieceName :: King)
+  // A King cannot move if the move places him in check.
+  if(piece->GetName() == PieceName::King)
   {
     if(IsCheck(piece->GetColor(), position_X, position_Y))
       return false;
   }
   SetPawnDiagonalEnemies(true, piece, -1, -1); // Sets the pawn's diagonal enemy markers
   obstacle = IsInTheSpot(piece, position_X, position_Y);
-  // If piece can move to the pos, and its path is empty, and there is either enemy or empty piece at that pos: 
-  if(piece->IsMovementPossible(position_X, position_Y) &&
-    (IsInTheWay(piece, position_X, position_Y) == Obstacles::Empty) &&
-    (obstacle != Obstacles::Friend))
+
+  if(piece->GetName() == PieceName::Bishop)
+  {
+    // Build the board representation.
+    Piece* board[8][8] = {nullptr};
+    for (int i = 0; i < 16; i++)
     {
-      SetPawnDiagonalEnemies(false, piece, -1, -1); // Removes the pawn's diagonal enemy 
-      // For pawn, movement and eating are different. So if the piece is pawn, and there was an enemy at pos, then pawn can move only if the movement was a diagonal one, and not straight
-      if((piece->GetName() == PieceName :: Pawn) && (obstacle == Obstacles::Enemy))
+      if(white_pieces[i]->GetIsAlive())
+      {
+        int x = white_pieces[i]->GetPositionX();
+        int y = white_pieces[i]->GetPositionY();
+        board[y][x] = white_pieces[i];
+      }
+      if(black_pieces[i]->GetIsAlive())
+      {
+        int x = black_pieces[i]->GetPositionX();
+        int y = black_pieces[i]->GetPositionY();
+        board[y][x] = black_pieces[i];
+      }
+    }
+    if(dynamic_cast<Bishop*>(piece)->IsMovementPossible(position_X, position_Y, board) &&
+       (obstacle != Obstacles::Friend))
+    {
+      SetPawnDiagonalEnemies(false, piece, -1, -1);
+      return true;
+    }
+    SetPawnDiagonalEnemies(false, piece, -1, -1);
+    return false;
+  }
+  else
+  {
+    if(piece->IsMovementPossible(position_X, position_Y) &&
+       (IsInTheWay(piece, position_X, position_Y) == Obstacles::Empty) &&
+       (obstacle != Obstacles::Friend))
+    {
+      SetPawnDiagonalEnemies(false, piece, -1, -1);
+      if((piece->GetName() == PieceName::Pawn) && (obstacle == Obstacles::Enemy))
       {
         if(piece->GetPositionX() - position_X != 0)
           return true;
@@ -592,10 +789,11 @@ bool States::IsPositionValid(Piece * piece, int position_X, int position_Y)
         return true;
       }
     }
-
-  SetPawnDiagonalEnemies(false, piece, -1, -1); // Removes the pawn's diagonal enemy markers
-  return false;
+    SetPawnDiagonalEnemies(false, piece, -1, -1);
+    return false;
+  }
 }
+
 
 /**@brief 
 *
@@ -1154,15 +1352,38 @@ void States::TransformPawn(Piece * piece)
   {
     color = piece->GetColor();
     y = piece->GetPositionY();
-    if((color && (y == 0)) || (!color && (y == 7))) //If pawn was able to reach the opposite row of board
+    // Check if the pawn has reached the last row for promotion.
+    if((color && (y == 0)) || (!color && (y == 7)))
     {
       x = piece->GetPositionX();
       color ? aux = white_pieces : aux = black_pieces;
+      
+      // Randomly select one of the allowed promotion options (1=Queen, 2=Rook, 3=Bishop, 4=Knight)
+      int choice = (rand() % 4) + 1;
+      
+      // Replace the pawn with the selected piece.
       for(i = 0; i < 16; i++)
       {
         if((aux[i]->GetPositionX() == x) && (aux[i]->GetPositionY() == y))
         {
-          aux[i] = new Queen(color, x, y);
+          switch(choice)
+          {
+            case 1:
+              aux[i] = new Queen(color, x, y);
+              break;
+            case 2:
+              aux[i] = new Rook(color, x, y);
+              break;
+            case 3:
+              aux[i] = new Bishop(color, x, y);
+              break;
+            case 4:
+              aux[i] = new Knight(color, x, y);
+              break;
+            default:
+              aux[i] = new Queen(color, x, y);
+              break;
+          }
           return;
         }
       }

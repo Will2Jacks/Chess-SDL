@@ -1,6 +1,7 @@
 #include "../include/Piece.hpp"
 
 Piece::Piece()
+  : isAlive(true), position_X(0), position_Y(0), hasMoved(false)
 {
 }
 
@@ -10,7 +11,6 @@ Piece::~Piece()
 
 /**@brief Method that returns the color of the piece.
 */
-
 bool Piece::GetColor()
 {
   return isWhite;
@@ -18,7 +18,6 @@ bool Piece::GetColor()
 
 /**@brief Method that returns the name of the piece.
 */
-
 PieceName Piece::GetName()
 {
   return name;
@@ -26,7 +25,6 @@ PieceName Piece::GetName()
 
 /**@brief Method that returns the piece's position on the X-axis of the board.
 */
-
 int Piece::GetPositionX()
 {
   return position_X;
@@ -34,7 +32,6 @@ int Piece::GetPositionX()
 
 /**@brief Method that returns the piece's position on the Y-axis of the board.
 */
-
 int Piece::GetPositionY()
 {
   return position_Y;
@@ -42,7 +39,6 @@ int Piece::GetPositionY()
 
 /**@brief Method that returns a boolean indicating whether the movement is possible.
 */
-
 bool Piece::IsMovementPossible(int FinalPosition_X, int FinalPosition_Y)
 {
   return false;
@@ -54,19 +50,19 @@ void Piece::SetDiagonalEnemy(bool hasDiagonalEnemyRight, bool hasDiagonalEnemyLe
 
 /**@brief Method that sets the X and Y positions of the piece on the board.
 */
-
 void Piece::SetPosition(int position_X, int position_Y)
 {
   if(isAlive)
   {
     this->position_X = position_X;
     this->position_Y = position_Y;
+    // When a piece is moved, we mark it as having moved.
+    hasMoved = true;
   }
 }
 
 /**@brief Method that indicates whether the piece is alive or not.
 */
-
 bool Piece::GetIsAlive()
 {
   return isAlive;
@@ -74,7 +70,6 @@ bool Piece::GetIsAlive()
 
 /**@brief Method that kills the piece.
 */
-
 void Piece::SetDead()
 {
   isAlive = false;
@@ -82,7 +77,23 @@ void Piece::SetDead()
   this->position_Y = -1;
 }
 
+/**@brief Method to bring a dead piece back to life.
+*/
 void Piece::WakeFromDead()
 {
   isAlive = true;
+}
+
+/**@brief Returns whether the piece has moved.
+*/
+bool Piece::GetHasMoved()
+{
+  return hasMoved;
+}
+
+/**@brief Sets the moved status for the piece.
+*/
+void Piece::SetHasMoved(bool moved)
+{
+  hasMoved = moved;
 }

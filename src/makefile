@@ -1,11 +1,11 @@
-####################################### Diretórios #########################################
-# Aqui estão listados os diretórios do projeto
+####################################### Directories #########################################
+# Here are the project directories
 
-# Nomes dos executáveis
+# Names of the executables
 PROJECT_EXE = Project
 TEST_EXE = ../Test
 
-# Nomes dos diretórios
+# Names of the directories
 DIR_HEADERS = ../include
 DIR_SOURCES = ../src
 DIR_OBJECTS = ../obj
@@ -15,20 +15,20 @@ DIR_GCOV = ../docs/gcov
 
 
 ########################################## FLAGS ###########################################
-# Especifica o compilador, a versão do C++ e as flags utilizadas para compilar o código
+# Specifies the compiler, the C++ version, and the flags used to compile the code
 
 CC = g++ -std=c++11
 CFLAGS = -I$(DIR_HEADERS) -ftest-coverage -fprofile-arcs
 LIBS = -lm -lSDL2 -lSDL2_image
 
-# Flags que vou precisar para o SDL (o usuário terá que instalar esses 4 pacotes)
-# Descomentar quando interface tiver pronta
+# Flags that I will need for SDL (the user will have to install these 4 packages)
+# Uncomment when the interface is ready
 #LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
 
 
-########################## Listas com nomes dos arquivos de código ##########################
-# Define o local dos arquivos de código e arquivos de cabeçalho de código
+########################## Lists with the names of the code files ##########################
+# Defines the location of the source code files and header files
 
 _HEADERS = Piece.hpp Pawn.hpp Knight.hpp Bishop.hpp Rook.hpp Queen.hpp King.hpp States.hpp Texture.hpp Button.hpp Graphics.hpp GameState.hpp GUIBoard.hpp
 HEADERS = $(patsubst %,$(DIR_HEADERS)/%,$(_HEADERS))
@@ -42,44 +42,44 @@ TESTS = $(patsubst %,$(DIR_TESTS)/%,$(_TESTS))
 
 
 ############################################ Make ############################################
-# Aqui são definidas as regras para compilar o código gerando arquivos objetos e binários
+# Here are defined the rules to compile the code generating object files and binaries
 
-# Gera arquivos objeto para todos os .cpp que estão localizados no mesmo diretório do makefile e em seguida compila
+# Generates object files for all .cpp files that are located in the same directory as the makefile and then compiles
 $(DIR_OBJECTS)/%.o: %.cpp $(HEADERS)
 	$(CC) -c -o $@ $< $(CFLAGS) $(LIBS)
 
-# Chama todos os arquivos objeto, gerando binários e criando o executável
+# Links all object files, generating binaries and creating the executable
 $(PROJECT_EXE): $(OBJECTS)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
-# Chama todos os arquivos objeto, gerando binários e criando o executável de teste, colocar aqui todos os módulos usados no teste
+# Links all object files, generating binaries and creating the test executable; put here all modules used in the test
 $(TEST_EXE): $(TESTS) Board.cpp Piece.cpp Pawn.cpp Knight.cpp Bishop.cpp Rook.cpp Queen.cpp King.cpp States.cpp
 	$(CC) -o $@ --coverage $^ $(CFLAGS)
 
 # MiniTutorial
 # all: library.cpp main.cpp
-# $@ - Chama o nome da regra 			- all
-# $< - Chama o primeiro pré-requisito 	- libray.cpp
-# $^ - Chama todos os pré-requisitos 	- library.cpp main.cpp
+# $@ - refers to the target name           - all
+# $< - refers to the first prerequisite      - library.cpp
+# $^ - refers to all prerequisites           - library.cpp main.cpp
 
 
 
-################################## Outras Regras de Make ####################################
-# Aqui estão listadas algumas regras úteis de make para facilitar o trabalho
+################################## Other Make Rules ####################################
+# Here are some useful make rules to facilitate work
 
 # make project
-# Limpa a tela e executa automaticamente o software
+# Clears the screen and automatically runs the software
 project:
 	clear
 	./$(PROJECT_EXE)
 
 # make test
-# Chama a regra que compila o teste, depois move o arquivo residual .gcno de src para obj
+# Calls the rule that compiles the test, then moves the residual .gcno file from src to obj
 test: $(TEST_EXE)
 	mv $(DIR_SOURCES)/*.gcno $(DIR_OBJECTS)
 
 # make gcov
-# executa o teste, move o .gcno de obj para src, gera o gcov e em seguida move todos os arquivos .gcno e .gcda de src para obj
+# Executes the test, moves the .gcno from obj to src, generates the gcov report and then moves all .gcno and .gcda files from src to obj
 gcov:
 	./$(TEST_EXE)
 
@@ -92,13 +92,13 @@ gcov:
 	mv $(DIR_SOURCES)/*.gcda $(DIR_OBJECTS)
 
 # make all
-# Chama todas as regras de make
+# Calls all the make rules
 all: $(PROJECT_EXE) test gcov project
 
 
 
 ########################################## Clean ###########################################
-# Deleta alguns arquivos do projeto (binários, objetos, gcov e gcda)
+# Deletes some project files (binaries, objects, gcov, and gcda files)
 
 .PHONY: clean gcov
 
