@@ -18,7 +18,7 @@ DIR_GCOV = ../docs/gcov
 # Specifies the compiler, the C++ version, and the flags used to compile the code
 
 CC = g++ -std=c++11
-CFLAGS = -I$(DIR_HEADERS) -ftest-coverage -fprofile-arcs
+CFLAGS = -I$(DIR_HEADERS) --coverage -ftest-coverage -fprofile-arcs -DSIGSTKSZ=32768
 LIBS = -lm -lSDL2 -lSDL2_image
 
 # Flags that I will need for SDL (the user will have to install these 4 packages)
@@ -53,7 +53,7 @@ $(PROJECT_EXE): $(OBJECTS)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 # Links all object files, generating binaries and creating the test executable; put here all modules used in the test
-$(TEST_EXE): $(TESTS) Board.cpp Piece.cpp Pawn.cpp Knight.cpp Bishop.cpp Rook.cpp Queen.cpp King.cpp States.cpp
+$(TEST_EXE): $(TESTS) Piece.cpp Pawn.cpp Knight.cpp Bishop.cpp Rook.cpp Queen.cpp King.cpp States.cpp
 	$(CC) -o $@ --coverage $^ $(CFLAGS)
 
 # MiniTutorial

@@ -1,7 +1,7 @@
 #include "../include/Piece.hpp"
 
 Piece::Piece()
-  : isAlive(true), position_X(0), position_Y(0), hasMoved(false)
+  : isAlive(false), position_X(-1), position_Y(-1), hasMoved(false)
 {
 }
 
